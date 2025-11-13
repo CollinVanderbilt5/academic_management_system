@@ -1,19 +1,19 @@
-## An example of using MYsql, this allows the database to be hosted onto a server that we can connect to, though for now we're using local host
+## A the file used for the MYsql database being hosted.
+## This allows the database to be hosted onto a server that we can connect to.
 
 ## This file requires set up
-## You need to install MySQL
-## Then make a local server with the user root and the password 1234
-## Then you have to make a new database in mysql called Whiteboard
+## You need to install MySQL 8.44 if you want to see the database since it's hosted on a server
+## use the host, user , and password to log in, you may need to give me your IP
 ## You also need to pip install mysql-connector-python
-##Then your done!
+## Then your done!
 
 import mysql.connector
 
 db = mysql.connector.connect( ## Connects to the server
-    host="localhost",
-    user="root",
-    passwd="1234", ##This is whatever password you used for the server
-    database="Whiteboard"
+    host="whiteboard-db.czyckmoyq306.us-east-2.rds.amazonaws.com",
+    user="admin",
+    passwd="nerdherd17", ##This is whatever password you used for the server
+    database="whiteboard"
 )
 
 cursor = db.cursor()

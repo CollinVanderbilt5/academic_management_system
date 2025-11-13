@@ -1,4 +1,6 @@
 ## An example of using sqlite 3 and having a our database on the same system
+## Used to test functions
+
 import _sqlite3 ##<-- This is a built in library
 
 connection = _sqlite3.connect('database/Whiteboard.db') ##Make/Open path to where the database will be, folder needs to be there
