@@ -5,12 +5,17 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)  # Allows JS from another domain to call your API
 
-db = mysql.connector.connect( ## Connects to the server
-    host="whiteboard-db.czyckmoyq306.us-east-2.rds.amazonaws.com",
-    user="admin",
-    passwd="nerdherd17", ##This is whatever password you used for the server
-    database="whiteboard"
-)
+def get_connection():
+    db = mysql.connector.connect( ## Connects to the server
+        host="whiteboard-db.czyckmoyq306.us-east-2.rds.amazonaws.com",
+        user="admin",
+        passwd="nerdherd17", ##This is whatever password you used for the server
+        database="whiteboard"
+    )
+    if db:
+        return db
+    else:
+        return None
 
 @app.route('/hello', methods=['GET'])
 def hello():
@@ -24,21 +29,24 @@ def login():
     password = data.get("password")
 
 
-    try:
-        conn = mysql.connector.connect(db)
-        cursor = conn.cursor(dictionary=True)  # dictionary=True gives column names
-        query = "SELECT name FROM Student WHERE student_id=%s AND password=%s"
-        cursor.execute(query, (username, password))
-        user = cursor.fetchone()
-    except mysql.connector.Error as err:
-        return jsonify({"success": False, "error": str(err)}), 500
-    finally:
-        cursor.close()
-        conn.close()
+    connection = get_connection()
+
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+
+    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+    query = "SELECT name FROM Student WHERE student_id=%s AND password=%s"
+    cursor.execute(query, (username, password))
+    user = cursor.fetchone()
+ 
+    cursor.close()
+    connection.close()
 
 
     if user:
         return jsonify({"success": True, "User" : user})
+    else:
+        return jsonify({"success": False, "User" : user})
 
 
 
