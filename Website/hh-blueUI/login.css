@@ -1,0 +1,66 @@
+body {
+    margin: 0;
+    background: #f3f8f3;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#title {
+    background: skyblue;
+    width: 100vw;
+    height: 80px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    font-family: "limelight", sans-serif;
+    color: white;
+    text-shadow:
+        -2px -2px 0 rgb(69, 142, 172),
+        2px -2px 0 rgb(69, 142, 172),
+        -2px 2px 0 rgb(69, 142, 172),
+        2px 2px 0 rgb(69, 142, 172);
+}
+
+.login-box {
+    width: 320px;
+    padding: 30px;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    text-align: center;
+    font-family: "Tasa Explorer", sans-serif;
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+    color: rgb(35, 98, 122);
+}
+
+.login-input {
+    padding: 12px;
+    margin-bottom: 15px;
+    border-radius: 10px;
+    border: 1px solid #cfe8d1;
+    font-size: 16px;
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background: rgb(35, 98, 122);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.login-button:hover {
+    transform: translateY(-3px);
+}
