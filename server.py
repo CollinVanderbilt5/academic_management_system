@@ -1,7 +1,12 @@
 import mysql.connector
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
-import sys
+
+
+## This file is using a virtual environment within the code base
+## Since the enviorment is already made just type 'my_project_env\Scripts\activate' into the terminal to activate it
+## If you want to see the libraries installed, just check requirements.txt
+
 
 app = Flask(__name__)
 CORS(app)  # Allows JS from another domain to call your API
@@ -9,6 +14,7 @@ CORS(app)  # Allows JS from another domain to call your API
 current_user : dict
 
 ##-----------DATA BASE QUERY FUNCTIONS-----------##
+## We might move this into another file
 
 ## Get's the connection to the mySQL database (hosted via AWS)
 def get_connection():

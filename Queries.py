@@ -3,9 +3,8 @@
 ## You need to install MySQL 8.44 if you want to see the database in a workbench
 ## use the host, user, and password to log in.
 
-## This file requires 1 line of code
-## In the terminal pip install mysql-connector-python
-## This way you can test your code before putting it in server.py since it is large
+## This file is using a virtual environment within the code base
+## Since the enviorment is already made just type 'my_project_env\Scripts\activate' into the terminal to activate it
 
 import os
 import mysql.connector
