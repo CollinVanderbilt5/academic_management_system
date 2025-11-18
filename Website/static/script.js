@@ -1,5 +1,12 @@
 document.getElementById('loginButton').addEventListener('click', SendLoginRequest);
 
+document.getElementById("password").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        SendLoginRequest()
+    }
+});
+
+
 function GetFromBackend() {
   fetch("http://127.0.0.1:5000/hello")
   .then(response => response.json())
@@ -25,3 +32,12 @@ function SendLoginRequest() {
   .then(response => response.json())
   .then(data => console.log(data));
 }
+
+function toggleDisplay(elementId) {
+      var element = document.getElementById(elementId);
+      if (element.style.display === "none") {
+        element.style.display = "block"; // Or appropriate display type
+      } else {
+        element.style.display = "none";
+      }
+    }
