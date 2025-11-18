@@ -1,11 +1,12 @@
 ## A the file used for the MYsql database being hosted.
 ## This allows the database to be hosted onto a server that we can connect to.
+## You need to install MySQL 8.44 if you want to see the database in a workbench
+## use the host, user, and password to log in.
 
-## This file requires set up
-## You need to install MySQL 8.44 if you want to see the database since it's hosted on a server
-## use the host, user , and password to log in, you may need to give me your IP
-## You also need to pip install mysql-connector-python
-## Then your done!
+## This file requires 1 line of code
+## In the terminal pip install mysql-connector-python
+## This way you can test your code before putting it in server.py since it is large
+
 import os
 import mysql.connector
 

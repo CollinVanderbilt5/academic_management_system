@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='forms.css')}}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Limelight&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=TASA+Explorer:wght@400..800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="title">
+      <h1>Whiteboard</h1>
+    </div>
+    <div class="form-box">
+      <div class="form-header">Add/Remove User</div>
+
+      <div class="form-content">
+        <div class="form-row">
+          <div><input type="checkbox" /> Add</div>
+          <div><input type="checkbox" /> Delete</div>
+        </div>
+
+        <div class="form-row">
+          <div><input type="checkbox" /> Student</div>
+          <div><input type="checkbox" /> Professor</div>
+          <div><input type="checkbox" /> Advisor</div>
+        </div>
+
+        <div class="note">
+          *As a student, you cannot choose another user type
+        </div>
+
+        <label>Enter ID</label>
+        <input type="text" />
+
+        <label>Enter Password</label>
+        <input type="password" />
+
+        <label>Confirm Password</label>
+        <input type="password" />
+      </div>
+    </div>
+  </body>
+</html>

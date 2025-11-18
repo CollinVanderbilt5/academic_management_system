@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='forms.css')}}" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Limelight&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=TASA+Explorer:wght@400..800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .status-text {
+        margin-top: 10px;
+        font-size: 16px;
+      }
+      .true-status {
+        color: green;
+        font-weight: bold;
+      }
+      .button-row {
+        margin-top: 15px;
+      }
+      .swap-btn,
+      .exit-btn {
+        padding: 6px 16px;
+        border: 1px solid #555;
+        background: #d9dfd9;
+        border-radius: 4px;
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="title">
+      <h1>Whiteboard</h1>
+    </div>
+    <div class="form-box">
+      <div class="form-header">Edit Student Advising Hold</div>
+
+      <div class="form-content">
+        <label>Enter Student ID</label>
+        <input type="text" value="18261532" />
+
+        <div class="status-text">
+          This student's advising hold is set as:
+          <span class="true-status">True</span>
+        </div>
+
+        <div class="button-row">
+          <button class="swap-btn">Swap</button>
+          <button class="exit-btn">Exit</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

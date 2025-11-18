@@ -1,0 +1,73 @@
+body {
+    margin: 0;
+    padding-top: 80px;
+}
+#title {
+    background: skyblue;
+    width: 100vw;
+    height: 80px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    font-family: "limelight", sans-serif;
+    color: white;
+    text-shadow:
+        -2px -2px 0 rgb(69, 142, 172),
+        2px -2px 0 rgb(69, 142, 172),
+        -2px 2px 0 rgb(69, 142, 172),
+        2px 2px 0 rgb(69, 142, 172);
+}
+#username {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: white;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 120px;
+}
+
+.menu-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 160px;
+    height: 220px;
+    background: skyblue;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: 0.2s;
+    font-family: "Tasa Explorer", sans-serif;
+    color: rgb(35, 98, 122);
+    text-align: center;
+}
+
+.menu-button:hover {
+    transform: translateY(-4px);
+}
+
+.icon {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 10px;
+}
+
+.menu-button p {
+    margin: 0;
+    font-size: 18px;
+}
+
+
+
