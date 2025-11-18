@@ -1,5 +1,5 @@
 import mysql.connector
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -17,6 +17,12 @@ def get_connection():
     else:
         return None
 
+
+@app.route("/")
+def home():
+    return render_template("index.html")
+
+
 @app.route('/hello', methods=['GET'])
 def hello():
     return jsonify({"message": "Hello from Python!"})
@@ -27,7 +33,6 @@ def login():
     data = request.get_json()
     username = data.get("username")
     password = data.get("password")
-
 
     connection = get_connection()
 

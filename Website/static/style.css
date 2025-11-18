@@ -1,0 +1,60 @@
+.center {
+  margin: auto;
+  width: 50%;
+  border: 3px solid rgb(44, 44, 44);
+  padding: 10px;
+}
+
+/* Centers div and contents */
+.wrapper {
+    text-align: center;
+    display: flex;             /* enables flexbox */
+    justify-content: center;   /* centers horizontally */
+    align-items: center;       /* centers vertically */
+    flex-direction: column;   /* stack elements vertically */
+    height: 100vh;             /* full screen height */
+}
+
+.wrapper > * {
+    margin: 0;
+}
+
+
+.label
+{
+  margin: 0 auto;
+  width: 50%;
+  padding: 10px 20px;
+  display: block;
+
+  text-align: center;
+}
+
+/* Full-width inputs */
+input[type=text], input[type=password] {
+  width: 50%;
+  padding: 12px 20px;
+  margin: 0 auto;
+  display: block;
+  border: 2px solid #ccc;
+  box-sizing: border-box;
+  
+}
+
+/* Set a style for all buttons */
+button {
+  background-color: #5aebb6;
+  color: white;
+  padding: 14px 20px;
+  margin: 0 auto;
+  border: none;
+  cursor: pointer;
+  width: 50%;
+  align-items: center;
+}
+
+/* Add a hover effect for buttons */
+button:hover {
+  opacity: 0.8;
+  transition: 0.5s, ease all;
+}
