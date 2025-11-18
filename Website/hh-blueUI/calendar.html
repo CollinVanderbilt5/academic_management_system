@@ -18,8 +18,8 @@
       }
 
       .assignment-box {
-        border: 1px solid #aaa;
-        background: #f8fff8;
+        border: 1px solid rgb(56, 123, 150);
+        background: rgb(244, 248, 250);
         padding: 10px;
         margin-top: 10px;
         border-radius: 4px;
@@ -31,8 +31,8 @@
         margin-left: 10px;
       }
 
-      .highlight-yellow {
-        background: yellow;
+      .highlight {
+        background: rgb(170, 198, 214);
         padding: 2px 4px;
         border-radius: 2px;
       }
@@ -52,16 +52,23 @@
         display: block;
         margin: 0 auto;
         padding: 6px 14px;
-        background: #c7d7c7;
-        border: 1px solid #888;
+        background: rgb(87, 174, 209);
+        border: 1px solid skyblue;
         border-radius: 4px;
         margin-bottom: 20px;
+        color: white;
+        font-family: "Tasa Explorer", sans-serif;
       }
     </style>
   </head>
   <body>
     <div id="title">
+      <div id="name">John Doe</div>
       <h1>Whiteboard</h1>
+      <div id="username">Student</div>
+    </div>
+    <div id="back-button">
+      <a href="homepage.html" class="back-button"><p>Back to Homepage</p></a>
     </div>
     <div class="form-box">
       <div class="form-header">Calendar View</div>
@@ -102,9 +109,7 @@
 
         <div class="assignment-box">
           <div><strong>Project Report</strong></div>
-          <div>
-            Due: <span class="highlight-yellow">Friday, March 13th</span>
-          </div>
+          <div>Due: <span class="highlight">Friday, March 13th</span></div>
         </div>
 
         <div class="assignment-box">
