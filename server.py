@@ -9,9 +9,9 @@ from flask_cors import CORS
 
 
 app = Flask(__name__)
+app.secret_key = "your-secret-key"
 CORS(app)  # Allows JS from another domain to call your API
 
-current_user : dict
 
 ##-----------DATA BASE QUERY FUNCTIONS-----------##
 ## We might move this into another file
@@ -31,7 +31,7 @@ def get_connection():
 
 ## Returns user data if ID and password exist in the database
 def login(id, pwd):
-    id = id
+    curr_id = id
     password = pwd
 
     connection = get_connection()
@@ -41,21 +41,16 @@ def login(id, pwd):
 
     cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
     query = "SELECT name FROM Student WHERE student_id=%s AND password=%s"
-    cursor.execute(query, (id, password))
-    user = cursor.fetchone()
+    cursor.execute(query, (curr_id, password))
+    current_user = cursor.fetchone()
  
     cursor.close()
     connection.close()
-
-
-    if user:
-        return jsonify({"success": True, "User" : user})
+    
+    if current_user:
+        return jsonify({"success": True, "User" : current_user['name'], "ID" : curr_id})
     else:
-        return jsonify({"success": False, "User" : user})
-
-
-
-
+        return jsonify({"success": False, "User" : current_user})
 
 
 
@@ -76,7 +71,7 @@ def homepage():
 
 @app.route('/index.html')
 def index():
-    return render_template("homepage.html")
+    return render_template("index.html")
 
 @app.route('/addremove.html')
 def addremove():
@@ -90,9 +85,9 @@ def addassign():
 def advishold():
     return render_template("advisinghold.html")
 
-@app.route('/calender.html')
+@app.route('/calendar.html')
 def calender():
-    return render_template("calender.html")
+    return render_template("calendar.html")
 
 @app.route('/enrolldrop.html')
 def enroll():

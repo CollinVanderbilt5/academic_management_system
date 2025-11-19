@@ -26,6 +26,10 @@ function SendLoginRequest() {
 
 function data_to_switch(data) {
   console.log(data)
-  if (data["success"])
+
+  if (data["success"]) {
+    localStorage.setItem("name", data["User"]);
+    localStorage.setItem("id", data["ID"]);
     window.location.href="/homepage"
-}
+  }
+} 

@@ -2,7 +2,7 @@ body {
     margin: 0;
     background: white;
     font-family: "Tasa Explorer", sans-serif;
-    padding-top: 100px;
+    padding-top: 80px;
 }
 #title {
     background: skyblue;
@@ -15,6 +15,8 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 999;
+}
+#whiteboard {
     font-family: "limelight", sans-serif;
     color: white;
     text-shadow:
@@ -22,6 +24,22 @@ body {
         2px -2px 0 rgb(69, 142, 172),
         -2px 2px 0 rgb(69, 142, 172),
         2px 2px 0 rgb(69, 142, 172);
+}
+#username {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: rgb(36, 135, 173);
+    font-family: "tasa explorer", sans-serif;
+}
+#name {
+    position: absolute;
+    left: 20px;
+    font-size: 20px;
+    color: rgb(36, 135, 173);
+    font-family: "tasa explorer", sans-serif;
 }
 .form-box {
     width: 90%;
@@ -61,7 +79,7 @@ input[type="text"],
 input[type="password"],
 input[type="date"],
 textarea {
-    width: 100%;
+    width: 97%;
     padding: 10px;
     font-size: 16px;
     margin-top: 5px;
@@ -86,4 +104,16 @@ textarea {
     color: red;
     font-size: 13px;
     margin-top: 4px;
+}
+
+#back-button {
+    margin-top: 0px;
+    margin-left:30px;
+    font-family: "tasa explorer", sans-serif;
+    font-size: 20px;
+}
+
+a {
+    color: skyblue;
+    text-decoration: none;
 }

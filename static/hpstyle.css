@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    padding-top: 80px;
+    padding-top: 90px;
 }
 #title {
     background: skyblue;
@@ -13,6 +13,8 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 999;
+}
+#whiteboard {
     font-family: "limelight", sans-serif;
     color: white;
     text-shadow:
@@ -27,7 +29,15 @@ body {
     top: 50%;
     transform: translateY(-50%);
     font-size: 20px;
-    color: white;
+    color: rgb(36, 135, 173);
+    font-family: "tasa explorer", sans-serif;
+}
+#name {
+    position: absolute;
+    left: 20px;
+    font-size: 20px;
+    color: rgb(36, 135, 173);
+    font-family: "tasa explorer", sans-serif;
 }
 
 .button-container {
@@ -42,7 +52,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 160px;
+    width: 300px;
     height: 220px;
     background: skyblue;
     text-decoration: none;
@@ -58,16 +68,26 @@ body {
 }
 
 .icon {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    margin-bottom: 10px;
+  display: block; 
+  margin: auto; 
+  color: white;
+  font-size: 50px;
+  padding-top:50px;   
 }
 
 .menu-button p {
     margin: 0;
-    font-size: 18px;
+    font-size: 30px;
 }
 
+.desc {
+    padding:30px;
+}
 
-
+#logout {
+    color: rgb(11, 96, 129);
+    font-family: "tasa explorer", sans-serif;
+    font-size: 20px;
+    text-decoration: none;
+    padding: 20px;
+}
