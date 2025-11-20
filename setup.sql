@@ -11,8 +11,9 @@ DROP TABLE IF EXISTS Advisor;
 
 CREATE TABLE Advisor (
 advisor_id 		INT PRIMARY KEY,
-office			VARCHAR(50),
+name            VARCHAR(80),
 dept			VARCHAR(50),
+office			VARCHAR(50),
 start_date		VARCHAR(50),
 password		VARCHAR(50)
 );
@@ -29,7 +30,8 @@ ON UPDATE CASCADE
 );
 
 CREATE TABLE Professor (
-prof_id			 INT PRIMARY KEY,
+prof_id			INT PRIMARY KEY,
+name            VARCHAR(80),
 dept 			VARCHAR(50),
 office			VARCHAR(50),
 start_date		VARCHAR(50),
@@ -102,9 +104,33 @@ ON DELETE CASCADE
 ON UPDATE CASCADE
 );
 
+INSERT INTO Advisor Values(1041, "Dobby Theelf", 
+"Comp Sci", "Comp Sci 205", "10/12/24", "AdVis0rsRUl3");
 
-INSERT INTO Advisor Values(1, "White House", "Comp Scie", "10/12/24", "I love Obama");
-INSERT INTO Student VALUES(1,"Dorian",false,1, "Marikiplier");
+INSERT INTO Student VALUES(1203, "Freddie Mercury", 
+false, 1041, "basedstudent123");
+
+INSERT INTO Professor VALUES(1544, "Homer Simpson", 
+"Comp sci", "Comp Sci 302", "9/23/21", "B3stT3acher");
+
+INSERT INTO Class VALUES(4150, 88, "Intro to AI", 1544);
+
+INSERT INTO Is_in VALUES(1203, 4150);
+
+INSERT INTO Assignment VALUES(4150, "Exam 2", 100, 63, 
+"No cheating! Review the example exams.", 11/14/25, 11/14/25);
+
+INSERT INTO Assignment VALUES(4150, "In class Quiz 5", 100, 60, 
+"Closed note, internet is NOT allowed!", 11/7/25, 11/7/25);
+
+INSERT INTO Assignment VALUES(4150, "Chatbot Coding Project", 100, 90, 
+"Code a chatbot from scratch", 10/25/25, 10/24/25);
+
+INSERT INTO Exam VALUES(4150, "Exam 2", "Comp Sci 206");
+
+INSERT INTO Quiz VALUES(4150, "In class Quiz 5", 50);
+
+INSERT INTO Project VALUES(4150, "Chatbot Coding Project", 3);
 
 Select * From Advisor;
 Select * From Student;
