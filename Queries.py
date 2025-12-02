@@ -19,34 +19,58 @@ def get_connection():
     else:
         return None
 
+
+
 ## Takes ID, and Password. Searches database, returns a json filled with information of found table
 def login(id, pwd):
     curr_id = id
     password = pwd
 
+    ## Set up connection
     connection = get_connection()
-
     if not connection:
         return jsonify({"error": "DB connection failed"}), 500
-
     cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+    
+    
     query = "SELECT name FROM Student WHERE student_id=%s AND password=%s"
     cursor.execute(query, (curr_id, password))
     current_user = cursor.fetchone()
- 
-    cursor.close()
-    connection.close()
     
-    if current_user:
-        return jsonify({"success": True, "User" : current_user['name'], "ID" : curr_id})
+    if current_user: ## If true, we got a Student, return info
+        cursor.close()
+        connection.close()
+        return jsonify({"success": True, "User" : current_user['name'], "ID" : curr_id, "account_type" : "Student"})
+
+    query = "SELECT name FROM Professor WHERE prof_id=%s AND password=%s"
+    cursor.execute(query, (curr_id, password))
+    current_user = cursor.fetchone()
+    
+    if current_user: ## If true, we got an Professor, return info
+        cursor.close()
+        connection.close()
+        return jsonify({"success": True, "user" : current_user['name'], "id" : curr_id, "account_type" : "Professor"})
+    
+
+    query = "SELECT name FROM Advisor WHERE advisor_id=%s AND password=%s"
+    cursor.execute(query, (curr_id, password))
+    current_user = cursor.fetchone()
+    
+    if current_user: ## If true, we got a Advisor, return info
+        cursor.close()
+        connection.close()
+        return jsonify({"success": True, "user" : current_user['name'], "id" : curr_id, "account_type" : "Advisor"})
+
+
     else:
-        return jsonify({"success": False, "User" : current_user})
+        return jsonify({"success": False, "user" : current_user, "account_type" : "Null"})
     
 
 def signUp(user, name, pwd):
     pass
 
-def addUser():
+## account type will be an enum, 0 = student, 1 = profesor, 2 =  advisor
+def addUser(user_account_type : int, addition_account_type):
     pass
 
 def deleteUser():
