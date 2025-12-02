@@ -1,7 +1,7 @@
 import mysql.connector
 from flask import Flask, jsonify, request, render_template
 from flask_cors import CORS
-
+from Queries import *
 
 ## This file is using a virtual environment within the code base
 ## Since the enviorment is already made just type 'my_project_env\Scripts\activate' into the terminal to activate it
@@ -28,30 +28,6 @@ def get_connection():
         return db
     else:
         return None
-
-## Returns user data if ID and password exist in the database
-def login(id, pwd):
-    curr_id = id
-    password = pwd
-
-    connection = get_connection()
-
-    if not connection:
-        return jsonify({"error": "DB connection failed"}), 500
-
-    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
-    query = "SELECT name FROM Student WHERE student_id=%s AND password=%s"
-    cursor.execute(query, (curr_id, password))
-    current_user = cursor.fetchone()
- 
-    cursor.close()
-    connection.close()
-    
-    if current_user:
-        return jsonify({"success": True, "User" : current_user['name'], "ID" : curr_id})
-    else:
-        return jsonify({"success": False, "User" : current_user})
-
 
 
 ##------------ Website Routes ------------##
