@@ -49,7 +49,32 @@ def signUp(user, name, pwd):
 def addUser():
     pass
 
-def deleteUser():
+def deleteUser(user_account_type : int, id : int):
+    connection = get_connection()
+
+
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+
+
+    cursor = connection.cursor(dictionary=True)
+
+
+    if user_account_type == 0 :
+        query = f"DELETE FROM Students WHERE student_id={id}"
+    elif user_account_type == 1 :
+        query = f"DELETE FROM Professors WHERE prof_id={id}"
+    elif user_account_type == 2 :
+        query = f"DELETE FROM Advisors WHERE ad_id={id}"
+    else:
+        return jsonify({"error": "Invalid account type"}), 500
+
+
+    cursor.execute(query)
+
+
+    cursor.close()
+    connection.close()
     pass
 
 def enrollClass():
