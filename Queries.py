@@ -64,6 +64,22 @@ def addAsignment():
 def organizeByDueDates():
     pass
 
+def organizeByClass():
+    pass
+
+def highlightAssignment():
+    pass
+
+def checkOffCheck():
+    pass
+
+def searchForAssignment():
+    pass
+
+def editHold():
+    pass
+
+
 ## only call this function if you're running this file, otherwise this is skipped
 ## This part opens the database and adds thing in the setup.sql file
 if __name__ == "__main__":
