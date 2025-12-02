@@ -1,19 +1,11 @@
-## A the file used for the MYsql database being hosted.
-## This allows the database to be hosted onto a server that we can connect to.
+## A the file used to query, insert, and change values into the database.
+
 ## You need to install MySQL 8.44 if you want to see the database in a workbench
-## use the host, user, and password to log in.
+## use the host, user, and password to log in, you can also use localhost to test on your machine.
+## If you're using localhost, run this file first, then run server.py
 
-## This file is using a virtual environment within the code base
-## Since the enviorment is already made just type 'my_project_env\Scripts\activate' into the terminal to activate it
-
-import os
 import mysql.connector
-
-advisor : bool = False
-student : bool = False
-professor : bool = False
-
-user : dict
+from flask import jsonify
 
 def get_connection():
     db = mysql.connector.connect( ## Connects to the server
@@ -27,73 +19,58 @@ def get_connection():
     else:
         return None
 
-def login(user, pwd) -> bool:
-    conn = get_connection()
-    if not conn:
-        print("Sorry can't connect to database")
-    cursor = conn.cursor(dictionary=True)
+## Takes ID, and Password. Searches database, returns a json filled with information of found table
+def login(id, pwd):
+    curr_id = id
+    password = pwd
 
-    query = "SELECT * FROM Student WHERE student_id=%s AND password=%s"
-    cursor.execute(query, (user, pwd))
-    user = cursor.fetchone()
+    connection = get_connection()
 
-    if user:
-        student = True
-        print("Welcome!", user["name"])
-        return True
-    else:
-        query = "SELECT advisor_id FROM Advisor WHERE advisor_id=%s AND password=%s"
-        cursor.execute(query, (user, pwd))
-        user = cursor.fetchone()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
 
-    if user and not student: 
-        advisor = True
-        return True
+    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+    query = "SELECT name FROM Student WHERE student_id=%s AND password=%s"
+    cursor.execute(query, (curr_id, password))
+    current_user = cursor.fetchone()
+ 
+    cursor.close()
+    connection.close()
     
-    return False
+    if current_user:
+        return jsonify({"success": True, "User" : current_user['name'], "ID" : curr_id})
+    else:
+        return jsonify({"success": False, "User" : current_user})
     
 
 def signUp(user, name, pwd):
     pass
 
+def addUser():
+    pass
 
+def deleteUser():
+    pass
 
-running = True
+def enrollClass():
+    pass
 
-login_screen : bool = True
-dashboard : bool = False
+def dropClass():
+    pass
 
-while running:
-    if os.name == 'nt':  # For Windows
-        os.system('cls')
-    else:  # For macOS and Linux
-        os.system('clear')
+def addAsignment():
+    pass
+
+def organizeByDueDates():
+    pass
+
+## only call this function if you're running this file, otherwise this is skipped
+## This part opens the database and adds thing in the setup.sql file
+if __name__ == "__main__":
+    connection = get_connection()
+
+    if not connection:
+        Exception("Couldn't connect to database!")
+    pass
+
     
-
-    if login_screen:
-        print("Welcome to Whiteboard!")
-        input_char = 'w'
-
-        while input_char != 'l' and input_char != 's' and input_char != 'q':
-            input_char = input("L to login, S to sign up, Q to quit: ")
-        input_char = input_char.lower()
-
-        if input_char == 'l':
-            success : bool = False
-            while (not success):
-                user_nam = input("Username: ")
-                passw = input("Password: ")
-                success = login(user_nam, passw)
-
-            
-            running = False
-
-        elif input_char == 's':
-            
-            running = False
-        elif input_char == 'q':
-            running = False
-
-
-
-print("\nThanks for using Whiteboard!")
