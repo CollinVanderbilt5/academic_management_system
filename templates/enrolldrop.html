@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='forms.css')}}" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='forms.css') }}"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Limelight&display=swap"
       rel="stylesheet"
@@ -13,7 +16,14 @@
   </head>
   <body>
     <div id="title">
-      <h1>Whiteboard</h1>
+      <div id="name">John Doe</div>
+      <h1 id="whiteboard">Whiteboard</h1>
+      <div id="username">Student</div>
+    </div>
+    <div id="back-button">
+      <a href="{{ url_for('homepage') }}" class="back-button"
+        ><p>Back to Homepage</p></a
+      >
     </div>
     <div class="form-box">
       <div class="form-header">Enroll/Drop Class</div>
@@ -32,4 +42,5 @@
       </div>
     </div>
   </body>
+  <script src="{{ url_for('static', filename='homepage.js') }}"></script>
 </html>
