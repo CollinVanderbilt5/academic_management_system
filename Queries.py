@@ -73,16 +73,16 @@ def signUp(user, name, pwd):
 def addUser(user_account_type : int, addition_account_type):
     pass
 
-def deleteUser():
+def deleteUser(user_account_type : int, id : int):
     pass
 
-def enrollClass():
+def enrollClass(advising_hold : bool, sid : int):
     pass
 
-def dropClass():
+def dropClass(sid : int):
     pass
 
-def addAsignment():
+def addAsignment(id : int):
     pass
 
 def organizeByDueDates():
@@ -100,7 +100,7 @@ def checkOffCheck():
 def searchForAssignment():
     pass
 
-def editHold():
+def editHold(user_account_type : int, id : int):
     pass
 
 
