@@ -74,6 +74,13 @@ def addUser(user_account_type : int, addition_account_type):
     pass
 
 def deleteUser(user_account_type : int, id : int):
+    
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+    
+    if(user_account_type =)
     pass
 
 def enrollClass(advising_hold : bool, sid : int):
