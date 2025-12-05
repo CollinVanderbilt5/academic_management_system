@@ -71,6 +71,7 @@ def signUp(user, name, pwd):
 
 ## account type will be an enum, 0 = student, 1 = profesor, 2 =  advisor
 def addUser(user_account_type : int, addition_account_type):
+    
     pass
 
 def deleteUser(user_account_type : int, id : int):
@@ -80,10 +81,22 @@ def deleteUser(user_account_type : int, id : int):
         return jsonify({"error": "DB connection failed"}), 500
     cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
     
-    if(user_account_type =)
+    if(user_account_type == 0) ##stuent account
+        query = "DELETE FROM Student WHERE student_id=id"
+
+    if(user_account_type == 1) ##professor account
+        query = "DELETE FROM Professor WHERE prof_id=id"
+
+    if(user_account_type == 2) ##advisor account
+        query = "DELETE FROM Admin WHERE ad_id=id"
+
+    cursor.execute(query)
+    cursor.close()
+    connection.close()
     pass
 
 def enrollClass(advising_hold : bool, sid : int):
+    
     pass
 
 def dropClass(sid : int):
