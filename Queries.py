@@ -71,7 +71,32 @@ def signUp(user, name, pwd):
 
 ## account type will be an enum, 0 = student, 1 = profesor, 2 =  advisor
 def addUser(user_account_type : int, addition_account_type):
+    ## Set up connection
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
     
+    if user_account_type = 0 :
+        student_id = input("input the students id: ")
+        student_name = input("input the students name: ")
+        bool student_hold = true
+        ad_id = input("input the students advisors id: ")
+        ##query = "INSERT INTO Students (student_id, name, advising_hold, ad_id) VALUES ()" ##not finished I am too confused
+        
+
+    if user_account_type = 1 :
+        ad_id = input("input the advisors id: ")
+        dept = input("input the admins advisors: ")
+        office = input("input the admins office: ")
+        start_date = input("input the current date: ")
+
+    if user_account_type = 2 :
+        prof_id = input("input the professors id: ")
+        dept = input("input the professors department: ")
+        office = input("input the professors office: ")
+        start_date = input("input the current date: ")
+
     pass
 
 def deleteUser(user_account_type : int, id : int):
@@ -81,13 +106,13 @@ def deleteUser(user_account_type : int, id : int):
         return jsonify({"error": "DB connection failed"}), 500
     cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
     
-    if(user_account_type == 0) ##stuent account
+    if user_account_type == 0 : ##stuent account
         query = "DELETE FROM Student WHERE student_id=id"
 
-    if(user_account_type == 1) ##professor account
+    if user_account_type == 1 : ##professor account
         query = "DELETE FROM Professor WHERE prof_id=id"
 
-    if(user_account_type == 2) ##advisor account
+    if user_account_type == 2 : ##advisor account
         query = "DELETE FROM Admin WHERE ad_id=id"
 
     cursor.execute(query)
