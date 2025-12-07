@@ -70,34 +70,35 @@ def signUp(user, name, pwd):
     pass
 
 ## account type will be an enum, 0 = student, 1 = profesor, 2 =  advisor
-def addUser(user_account_type : int, addition_account_type):
-    ## Set up connection
+def addUser(user_account_type : int, account_to_add_type : int, id, password):
+    
+    ## Makes it so accounts can't edit any accoint on a higher tier
+    if account_to_add_type < user_account_type: 
+        return jsonify({"success": False, "error" : "can't add account higher than your own"})
+    
     connection = get_connection()
     if not connection:
         return jsonify({"error": "DB connection failed"}), 500
-    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
     
-    if user_account_type = 0 :
-        student_id = input("input the students id: ")
-        student_name = input("input the students name: ")
-        bool student_hold = true
-        ad_id = input("input the students advisors id: ")
-        ##query = "INSERT INTO Students (student_id, name, advising_hold, ad_id) VALUES ()" ##not finished I am too confused
-        
+    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+    query = None
 
-    if user_account_type = 1 :
-        ad_id = input("input the advisors id: ")
-        dept = input("input the admins advisors: ")
-        office = input("input the admins office: ")
-        start_date = input("input the current date: ")
+    match account_to_add_type:
+        case 0:
+            query = f"INSERT into Student({id}, NULL, NULL, NULL, {password})"
+        case 1:
+            query = f"INSERT into Professor({id}, NULL, NULL, NULL, NULL,{password})"
+        case 2:
+            query = f"INSERT into Advisor({id}, NULL, NULL, NULL, NULL,{password})"
 
-    if user_account_type = 2 :
-        prof_id = input("input the professors id: ")
-        dept = input("input the professors department: ")
-        office = input("input the professors office: ")
-        start_date = input("input the current date: ")
+    if query:
+        cursor.execute(query)
+    
+    cursor.close()
+    connection.close()
 
-    pass
+    return jsonify({"error": "DB connection failed"}), 500
+    
 
 def deleteUser(user_account_type : int, id : int):
     
