@@ -172,6 +172,26 @@ def enrollClass(advising_hold : bool, sid : int):
     pass
 
 def dropClass(sid : int):
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    course_id_input = input("Enter the course ID: ")
+
+    query = "SELECT course_id FROM Class WHERE course_id=%s"
+    cursor.execute(query, (course_id_input,))
+    course_exist = cursor.fetchone()
+
+    if course_exist:
+        query_drop = "DELETE FROM Is_in WHERE course_id_input=course_id"
+        cursor.execute(query_drop)
+        cursor.commit()
+        return jsonify({"success": True, "course_id" : course_id_input, "sid" : sid})
+    else:
+        return jsonify({"success": False, "message" : "Course does not exist", "course_id" : course_id_input}), 500
+    cursor.close()
+    connection.close()
     pass
 
 def addAsignment(id : int):
