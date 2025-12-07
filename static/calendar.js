@@ -1,12 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const container = document.getElementById("assignments-container");
-  const userID = localStorage.getItem("id");
-
-  if (!userID) {
-    container.innerHTML = "<p>Error: Not logged in.</p>";
-    return;
-  }
-
   loadAssignments();
 });
 
@@ -25,9 +17,7 @@ function renderAssignment(a) {
   if (dueDate < now) {
     warning = `<span class="due-warning">Past due date. Mark complete?</span>`;
   } else if (
-    dueDate.getDate() === now.getDate() &&
-    dueDate.getMonth() === now.getMonth() &&
-    dueDate.getFullYear() === now.getFullYear()
+    dueDate.toDateString() === now.toDateString()
   ) {
     highlight = `<span class="highlight">Due Today</span>`;
   } else if (dueDate < oneWeekFromNow) {
@@ -41,12 +31,9 @@ function renderAssignment(a) {
   });
 
   div.innerHTML = `
-      <div><strong>${a.title}</strong></div>
-      <div>
-        Due: ${formattedDate} ${highlight} ${warning}
-      </div>
+      <div><strong>${a.assignment_title}</strong> - <em>${a.course_title}</em></div>
+      <div>Due: ${formattedDate} ${highlight} ${warning}</div>
   `;
-
   return div;
 }
 
@@ -55,10 +42,11 @@ async function loadAssignments() {
   container.innerHTML = "Loading...";
 
   try {
-    const response = await fetch("/api/get_assignments");
+    const response = await fetch("/api/get_assignments"); // make sure server route calls get_all_assignments_json
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const data = await response.json();
+    console.log("Assignments data:", data); // debug what is coming from the API
 
     if (!data.success || !data.assignments || data.assignments.length === 0) {
       container.innerHTML = "<p>No assignments found.</p>";
@@ -72,6 +60,6 @@ async function loadAssignments() {
     });
   } catch (err) {
     console.error("Error fetching assignments:", err);
-    container.innerHTML = "<p>Error loading assignments.</p>";
+    container.innerHTML = `<p>Error loading assignments: ${err.message}</p>`;
   }
 }

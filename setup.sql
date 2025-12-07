@@ -115,13 +115,9 @@ INSERT INTO Professor VALUES(1544, "Homer Simpson",
 
 INSERT INTO Class VALUES(4150, "Intro to AI", 1544);
 
+INSERT INTO Class VALUES(4200, "Data Structures", 1544);
+
 INSERT INTO Is_in VALUES(1203, 4150, 88);
-
-INSERT INTO Exam VALUES(4150, "Exam 2", "Comp Sci 206");
-
-INSERT INTO Quiz VALUES(4150, "In class Quiz 5", 50);
-
-INSERT INTO Project VALUES(4150, "Chatbot Coding Project", 3);
 
 Select * From Advisor;
 Select * From Student;

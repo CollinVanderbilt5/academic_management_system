@@ -79,19 +79,26 @@ def advishold():
 def calender():
     return render_template("calendar.html")
 
-# Show assignemts on calendar
 @app.route("/api/get_assignments")
-def get_assignments():
-    assignments = get_all_assignments() 
-    return jsonify({
-        "success": True,
-        "assignments": assignments
-    })
-
+def get_assignments_route():
+    return get_all_assignments_json()
 
 @app.route('/enrolldrop.html')
 def enroll():
     return render_template("enrolldrop.html")
+
+@app.route("/api/enroll_class", methods=["POST"])
+def api_enroll_class():
+    data = request.get_json()
+    success = enrollClass(sid=data["student_id"], course_id=data["course_id"])
+    return jsonify({"success": success})
+
+@app.route("/api/drop_class", methods=["POST"])
+def api_drop_class():
+    data = request.get_json()
+    success = dropClass(sid=data["student_id"], course_id=data["course_id"])
+    return jsonify({"success": success})
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

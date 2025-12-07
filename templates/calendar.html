@@ -65,7 +65,6 @@
       }
     </style>
 
-    <!-- Order matters: main.js first -->
     <script src="{{ url_for('static', filename='main.js') }}" defer></script>
     <script
       src="{{ url_for('static', filename='calendar.js') }}"
@@ -74,7 +73,6 @@
   </head>
 
   <body>
-    <!-- Title bar -->
     <div id="title">
       <div id="name">Loading...</div>
       <h1 id="whiteboard">Whiteboard</h1>

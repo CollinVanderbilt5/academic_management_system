@@ -13,7 +13,10 @@
       href="https://fonts.googleapis.com/css2?family=TASA+Explorer:wght@400..800&display=swap"
       rel="stylesheet"
     />
-    <script src="{{ url_for('static', filename='main.js') }}" defer></script>
+    <script
+      src="{{ url_for('static', filename='enrollDrop.js') }}"
+      defer
+    ></script>
   </head>
   <body>
     <div id="title">
@@ -31,13 +34,13 @@
 
       <div class="form-content">
         <div class="form-row">
-          <div><input type="checkbox" /> Enroll</div>
-          <div><input type="checkbox" /> Drop</div>
+          <div><input type="checkbox" id="enroll-checkbox" /> Enroll</div>
+          <div><input type="checkbox" id="drop-checkbox" /> Drop</div>
         </div>
 
         <label>Enter Course ID</label>
-        <input type="text" />
-        <button id="submit-assignment" class="swap-btn">Submit</button>
+        <input type="text" id="course-id" />
+        <button id="submit-course" class="swap-btn">Submit</button>
         <p
           id="submit-message"
           style="color: rgb(141, 175, 219); margin-top: 10px"
