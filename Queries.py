@@ -63,47 +63,70 @@ def login(id, pwd):
 
 
     else:
-        return jsonify({"success": False, "user" : current_user, "account_type" : "Null"})
+        return jsonify({"success": False, "user" : current_user, "account_type" : "Null"}), 500
     
 
 def signUp(user, name, pwd):
     pass
 
 ## account type will be an enum, 0 = student, 1 = profesor, 2 =  advisor
-def addUser(user_account_type : int, addition_account_type):
-    ## Set up connection
+def addUser(user_account_type : int, account_to_add_type : int, id, password):
+    
+    ## Makes it so accounts can't edit any accoint on a higher tier
+    if account_to_add_type < user_account_type: 
+        return jsonify({"success": False, "error" : "can't add account higher than your own"})
+    
     connection = get_connection()
     if not connection:
-        return jsonify({"error": "DB connection failed"}), 500
+        return jsonify({"success": False, "error": "DB connection failed"}), 500
+    
     cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+    query = None
+
+    match account_to_add_type:
+        case 0:
+            query = f"INSERT into Student({id}, NULL, NULL, NULL, {password})"
+        case 1:
+            query = f"INSERT into Professor({id}, NULL, NULL, NULL, NULL,{password})"
+        case 2:
+            query = f"INSERT into Advisor({id}, NULL, NULL, NULL, NULL,{password})"
+
+    if query:
+        cursor.execute(query)
     
-    if user_account_type == 0 :
-        student_id = input("input the students id: ")
-        student_name = input("input the students name: ")
-        student_hold = True
-        ad_id = input("input the students advisors id: ")
-        ##query = "INSERT INTO Students (student_id, name, advising_hold, ad_id) VALUES ()" ##not finished I am too confused
-        
+    ## We just search for the user we added to see if the change worked
+    match account_to_add_type:
+        case 0:
+            query = f"INSERT into Student({id}, NULL, NULL, NULL, {password})"
+        case 1:
+            query = f"INSERT into Professor({id}, NULL, NULL, NULL, NULL,{password})"
+        case 2:
+            query = f"INSERT into Advisor({id}, NULL, NULL, NULL, NULL,{password})"
 
-    if user_account_type == 1 :
-        ad_id = input("input the advisors id: ")
-        dept = input("input the admins advisors: ")
-        office = input("input the admins office: ")
-        start_date = input("input the current date: ")
+    if query:
+        cursor.execute(query)
 
-    if user_account_type == 2 :
-        prof_id = input("input the professors id: ")
-        dept = input("input the professors department: ")
-        office = input("input the professors office: ")
-        start_date = input("input the current date: ")
+    check = cursor.fetchone()
 
-    pass
+    ## If we found our person, return true
+    if check:
+        cursor.close()
+        connection.close()
+        return jsonify({"success" : True})
+    else:
+        return jsonify({"success": False, "error": "DB insertion failed"}), 500
 
-def deleteUser(user_account_type : int, id : int):
+## account type will be an enum, 0 = student, 1 = profesor, 2 =  advisor
+def deleteUser(user_account_type : int, account_to_delete_type : int, id : int):
     
+    ## Makes it so accounts can't edit any accoint on a higher tier
+    if account_to_delete_type < user_account_type: 
+        return jsonify({"success": False, "error" : "can't add account higher than your own"})
+
     connection = get_connection()
     if not connection:
         return jsonify({"error": "DB connection failed"}), 500
+    
     cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
     
     if user_account_type == 0 : ##stuent account
@@ -116,12 +139,36 @@ def deleteUser(user_account_type : int, id : int):
         query = "DELETE FROM Admin WHERE ad_id=id"
 
     cursor.execute(query)
+
+    
     cursor.close()
     connection.close()
-    pass
+    
 
 def enrollClass(advising_hold : bool, sid : int):
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    course_id_input = input("Enter the course ID: ")
+
+    if advising_hold:
+        return jsonify({"success": False, "message" : "Unable to enroll due to advising hold", "sid" : sid}), 500
+    else:
+        query = "SELECT course_id FROM Class WHERE course_id=%s"
+        cursor.execute(query, (course_id_input,))
+        course_exist = cursor.fetchone()
     
+        if course_exist:
+            query_insert = "INSERT INTO Is_in VALUES(sid, course_id, 100)"
+            cursor.execute(query_insert)
+            cursor.commit()
+            return jsonify({"success": True, "course_id" : course_id_input, "sid" : sid})
+        else:
+            return jsonify({"success": False, "message" : "Course does not exist", "course_id" : course_id_input}), 500
+    cursor.close()
+    connection.close()
     pass
 
 def dropClass(sid : int):
@@ -175,9 +222,56 @@ def checkOffCheck():
     pass
 
 def searchForAssignment():
+
+    assignment_name = input("Enter assignment name to search for: ")
+    course_id = input("Enter course ID to search in: ")
+    due_date : str
+    point_value : int
+    class_title : str
+
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+    
+    query = "SELECT course_id, due_date, point_value INTO @course_id, @due_date, @point_value  FROM Assignment WHERE name=%s AND course_id=%s"
+    cursor.execute(query, (assignment_name, course_id))
+    assignment = cursor.fetchone()
+
+    if assignment:
+        cursor.close()
+        connection.close()
+        print(assignment_name, due_date, point_value, class_title, sep=', ', end='end')
+        return jsonify({"success": True, "assignment_name" : assignment_name, "course_id" : assignment['course_id'], "due_date" : assignment['due_date'], "point_value" : assignment['point_value'], "class_title" : class_title})
+
+
+    else:
+        return jsonify({"success": False, "error" : "assignment not found"})
     pass
 
 def editHold(user_account_type : int, id : int):
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+
+    if user_account_type != 2: ##only advisors can edit holds
+        return jsonify({"success": False, "error" : "can't edit holds with your account type"})
+
+    student_id = input("Enter student ID to edit hold: ")
+    query = "SELECT name FROM Student WHERE student_id=%s"
+    cursor.execute(query, (student_id,))
+    current_user = cursor.fetchone()
+    if not current_user:
+        return jsonify({"success": False, "error" : "student not found"})
+
+    query = "UPDATE Student SET advising_hold = NOT advising_hold WHERE student_id=%s"
+    cursor.execute(query, (student_id,))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    return jsonify({"success": True, "message": "hold status updated"})
     pass
 
 # For calendar view: gets all assignments
