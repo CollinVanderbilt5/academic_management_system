@@ -117,15 +117,6 @@ INSERT INTO Class VALUES(4150, "Intro to AI", 1544);
 
 INSERT INTO Is_in VALUES(1203, 4150, 88);
 
-INSERT INTO Assignment VALUES(4150, "Exam 2", 100, 63, 
-"No cheating! Review the example exams.", "2025-11-14", "2025-11-14");
-
-INSERT INTO Assignment VALUES(4150, "In class Quiz 5", 100, 60, 
-"Closed note, internet is NOT allowed!", "2025-11-07", "2025-11-07");
-
-INSERT INTO Assignment VALUES(4150, "Chatbot Coding Project", 100, 90, 
-"Code a chatbot from scratch", "2025-10-25", "2025-10-24");
-
 INSERT INTO Exam VALUES(4150, "Exam 2", "Comp Sci 206");
 
 INSERT INTO Quiz VALUES(4150, "In class Quiz 5", 50);

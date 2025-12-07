@@ -13,6 +13,7 @@
       href="https://fonts.googleapis.com/css2?family=TASA+Explorer:wght@400..800&display=swap"
       rel="stylesheet"
     />
+
     <style>
       .section-title {
         margin-top: 20px;
@@ -63,19 +64,29 @@
         font-family: "Tasa Explorer", sans-serif;
       }
     </style>
+
+    <!-- Order matters: main.js first -->
     <script src="{{ url_for('static', filename='main.js') }}" defer></script>
+    <script
+      src="{{ url_for('static', filename='calendar.js') }}"
+      defer
+    ></script>
   </head>
+
   <body>
+    <!-- Title bar -->
     <div id="title">
-      <div id="name">John Doe</div>
+      <div id="name">Loading...</div>
       <h1 id="whiteboard">Whiteboard</h1>
       <div id="username">Student</div>
     </div>
+
     <div id="back-button">
-      <a href="{{ url_for('homepage') }}" class="back-button"
-        ><p>Back to Homepage</p></a
-      >
+      <a href="{{ url_for('homepage') }}" class="back-button">
+        <p>Back to Homepage</p>
+      </a>
     </div>
+
     <div class="form-box">
       <div class="form-header">Calendar View</div>
 
@@ -83,45 +94,29 @@
         <div class="calendar-grid">
           <div>
             <label>Highlight</label><br />
-            <input type="checkbox" /> Due Today<br />
-            <input type="checkbox" /> Due This Week
+            <input type="checkbox" id="filter-today" /> Due Today<br />
+            <input type="checkbox" id="filter-week" /> Due This Week
           </div>
 
           <div>
             <label>Search</label><br />
             Assignment Name: <br />
-            <input type="text" /><br />
+            <input type="text" id="search-name" /><br />
             CourseID: <br />
-            <input type="text" />
+            <input type="text" id="search-course" />
           </div>
 
           <div>
             <label>Organize by:</label><br />
-            <input type="checkbox" /> Due Date<br />
-            <input type="checkbox" /> Class
+            <input type="checkbox" id="sort-date" /> Due Date<br />
+            <input type="checkbox" id="sort-class" /> Class
           </div>
         </div>
 
-        <button class="course-button">COMP SCI 2300</button>
+        <button class="course-button" id="load-classes">View My Classes</button>
 
-        <!-- Example assignments (static placeholders) -->
-        <div class="assignment-box">
-          <div><strong>Homework 3</strong></div>
-          <div>
-            Due: Thursday, March 12th
-            <span class="due-warning">Past due date. Mark complete?</span>
-          </div>
-        </div>
-
-        <div class="assignment-box">
-          <div><strong>Project Report</strong></div>
-          <div>Due: <span class="highlight">Friday, March 13th</span></div>
-        </div>
-
-        <div class="assignment-box">
-          <div><strong>Quiz #14</strong></div>
-          <div>Due: Sunday, March 15th</div>
-        </div>
+        <!-- Dynamic assignments load here -->
+        <div id="assignments-container"></div>
       </div>
     </div>
   </body>

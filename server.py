@@ -57,6 +57,20 @@ def addremove():
 def addassign():
     return render_template("addassignment.html")
 
+# Add assignment to database
+@app.route("/api/add_assignment", methods=["POST"])
+def api_add_assignment():
+    data = request.get_json()
+    success = add_assignment(
+        data["course_id"],
+        data["title"],
+        data["description"],
+        data["point_value"],
+        data["due_date"]
+    )
+    return jsonify({"success": success})
+
+
 @app.route('/advisinghold.html')
 def advishold():
     return render_template("advisinghold.html")
@@ -64,6 +78,16 @@ def advishold():
 @app.route('/calendar.html')
 def calender():
     return render_template("calendar.html")
+
+# Show assignemts on calendar
+@app.route("/api/get_assignments")
+def get_assignments():
+    assignments = get_all_assignments() 
+    return jsonify({
+        "success": True,
+        "assignments": assignments
+    })
+
 
 @app.route('/enrolldrop.html')
 def enroll():

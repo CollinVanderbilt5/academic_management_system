@@ -127,8 +127,40 @@ def enrollClass(advising_hold : bool, sid : int):
 def dropClass(sid : int):
     pass
 
-def addAsignment(id : int):
-    pass
+def add_assignment(course_id, title, description, point_value, due_date):
+    try:
+        connection = get_connection()
+        if not connection:
+            return False
+
+        cursor = connection.cursor()
+
+        query = """
+            INSERT INTO Assignment (course_id, title, point_value, grade, description, due_date, completed)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+
+        cursor.execute(query, (
+            course_id,
+            title,
+            point_value,
+            0,                # grade default 0
+            description,
+            due_date,
+            False             # completed default false
+        ))
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        return True   # <- return a boolean success flag
+
+    except mysql.connector.Error as err:
+        print("Error:", err)
+        return False
+
+
 
 def organizeByDueDates():
     pass
@@ -147,6 +179,23 @@ def searchForAssignment():
 
 def editHold(user_account_type : int, id : int):
     pass
+
+# For calendar view: gets all assignments
+def get_all_assignments():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM Assignment ORDER BY due_date ASC")
+        rows = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+        return rows
+
+    except mysql.connector.Error as err:
+        print("Error:", err)
+        return []
 
 
 ## only call this function if you're running this file, otherwise this is skipped
