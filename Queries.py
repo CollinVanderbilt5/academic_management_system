@@ -267,6 +267,10 @@ def checkOffCheck():
     pass
 
 def searchForAssignment():
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
 
     assignment_name = input("Enter assignment name to search for: ")
     course_id = input("Enter course ID to search in: ")
