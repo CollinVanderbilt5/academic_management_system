@@ -63,7 +63,7 @@ def login(id, pwd):
 
 
     else:
-        return jsonify({"success": False, "user" : current_user, "account_type" : "Null"})
+        return jsonify({"success": False, "user" : current_user, "account_type" : "Null"}), 500
     
 
 def signUp(user, name, pwd):
@@ -146,7 +146,29 @@ def deleteUser(user_account_type : int, account_to_delete_type : int, id : int):
     
 
 def enrollClass(advising_hold : bool, sid : int):
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    course_id_input = input("Enter the course ID: ")
+
+    if advising_hold:
+        return jsonify({"success": False, "message" : "Unable to enroll due to advising hold", "sid" : sid}), 500
+    else:
+        query = "SELECT course_id FROM Class WHERE course_id=%s"
+        cursor.execute(query, (course_id_input,))
+        course_exist = cursor.fetchone()
     
+        if course_exist:
+            query_insert = "INSERT INTO Is_in VALUES(sid, course_id, 100)"
+            cursor.execute(query_insert)
+            cursor.commit()
+            return jsonify({"success": True, "course_id" : course_id_input, "sid" : sid})
+        else:
+            return jsonify({"success": False, "message" : "Course does not exist", "course_id" : course_id_input}), 500
+    cursor.close()
+    connection.close()
     pass
 
 def dropClass(sid : int):
