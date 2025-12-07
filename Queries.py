@@ -147,6 +147,30 @@ def searchForAssignment():
     pass
 
 def editHold(user_account_type : int, id : int):
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+
+    if user_account_type != 2: ##only advisors can edit holds
+        return jsonify({"success": False, "error" : "can't edit holds with your account type"})
+
+    student_id = input("Enter student ID to edit hold: ")
+    query = "SELECT name FROM Student WHERE student_id=%s"
+    cursor.execute(query, (student_id,))
+    current_user = cursor.fetchone()
+    if not current_user:
+        return jsonify({"success": False, "error" : "student not found"})
+
+    query = "UPDATE Student SET advising_hold = NOT advising_hold WHERE student_id=%s"
+    cursor.execute(query, (student_id,))
+    cursor.close()
+    connection.close()
+
+    else:
+    return jsonify({"success": False, "error" : "invalid account type"})
+
+    return jsonify({"success": True, "message" : "hold status updated"})
     pass
 
 
