@@ -78,7 +78,7 @@ def addUser(user_account_type : int, account_to_add_type : int, id, password):
     
     connection = get_connection()
     if not connection:
-        return jsonify({"error": "DB connection failed"}), 500
+        return jsonify({"success": False, "error": "DB connection failed"}), 500
     
     cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
     query = None
@@ -94,17 +94,39 @@ def addUser(user_account_type : int, account_to_add_type : int, id, password):
     if query:
         cursor.execute(query)
     
-    cursor.close()
-    connection.close()
+    ## We just search for the user we added to see if the change worked
+    match account_to_add_type:
+        case 0:
+            query = f"INSERT into Student({id}, NULL, NULL, NULL, {password})"
+        case 1:
+            query = f"INSERT into Professor({id}, NULL, NULL, NULL, NULL,{password})"
+        case 2:
+            query = f"INSERT into Advisor({id}, NULL, NULL, NULL, NULL,{password})"
 
-    return jsonify({"error": "DB connection failed"}), 500
-    
+    if query:
+        cursor.execute(query)
 
-def deleteUser(user_account_type : int, id : int):
+    check = cursor.fetchone()
+
+    ## If we found our person, return true
+    if check:
+        cursor.close()
+        connection.close()
+        return jsonify({"success" : True})
+    else:
+        return jsonify({"success": False, "error": "DB insertion failed"}), 500
+
+## account type will be an enum, 0 = student, 1 = profesor, 2 =  advisor
+def deleteUser(user_account_type : int, account_to_delete_type : int, id : int):
     
+    ## Makes it so accounts can't edit any accoint on a higher tier
+    if account_to_delete_type < user_account_type: 
+        return jsonify({"success": False, "error" : "can't add account higher than your own"})
+
     connection = get_connection()
     if not connection:
         return jsonify({"error": "DB connection failed"}), 500
+    
     cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
     
     if user_account_type == 0 : ##stuent account
@@ -117,9 +139,11 @@ def deleteUser(user_account_type : int, id : int):
         query = "DELETE FROM Admin WHERE ad_id=id"
 
     cursor.execute(query)
+
+    
     cursor.close()
     connection.close()
-    pass
+    
 
 def enrollClass(advising_hold : bool, sid : int):
     
