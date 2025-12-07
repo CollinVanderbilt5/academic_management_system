@@ -168,6 +168,31 @@ def checkOffCheck():
     pass
 
 def searchForAssignment():
+
+    assignment_name = input("Enter assignment name to search for: ")
+    course_id = input("Enter course ID to search in: ")
+    due_date : char
+    point_value : int
+    class_title : char 
+
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+    
+    query = "SELECT course_id, due_date, point_value INTO @course_id, @due_date, @point_value  FROM Assignment WHERE name=%s AND course_id=%s"
+    cursor.execute(query, (assignment_name, course_id))
+    assignment = cursor.fetchone()
+
+    if assignment:
+        cursor.close()
+        connection.close()
+        print(assignment_name, due_date, point_value, class_title, sep=', ', end='end')
+        return jsonify({"success": True, "assignment_name" : assignment_name, "course_id" : assignment['course_id'], "due_date" : assignment['due_date'], "point_value" : assignment['point_value'], "class_title" : class_title})
+
+
+    else:
+    return jsonify({"success": False, "error" : "assignment not found"})
     pass
 
 def editHold(user_account_type : int, id : int):
