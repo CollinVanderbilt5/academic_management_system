@@ -134,6 +134,24 @@ def api_edit_hold():
         result = getAdvisingHold(student_id)
     return jsonify({"success": True, "advising_hold": result.get("advising_hold")})
 
+@app.route("/api/complete_assignment", methods=["POST"])
+def complete_assignment():
+    data = request.get_json()
+    course_id = data.get("course_id")
+    title = data.get("title")
+
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+        query = "UPDATE Assignment SET completed = TRUE WHERE course_id = %s AND title = %s"
+        cursor.execute(query, (course_id, title))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)})
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

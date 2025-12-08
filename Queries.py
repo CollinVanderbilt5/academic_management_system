@@ -290,16 +290,6 @@ def add_assignment(course_id, title, description, point_value, due_date, type_, 
 
 
 
-
-def organizeByDueDates():
-    pass
-
-def organizeByClass():
-    pass
-
-def checkOffCheck():
-    pass
-
 def searchForAssignment():
     connection = get_connection()
     if not connection:
