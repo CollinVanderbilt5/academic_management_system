@@ -285,10 +285,6 @@ def add_assignment(course_id, title, description, point_value, due_date):
         print("Error adding assignment:", e)
         return False
 
-
-def classGrade(course_id, student_id):
-    pass
-
 def organizeByDueDates():
     connection = get_connection()
     if not connection:
@@ -363,12 +359,6 @@ def classAverage(course_id):
     connection.close()
 
     return jsonify({"success" : True, "grade" : average})
-    
-def highlightAssignment():
-    pass
-
-def checkOffCheck():
-    pass
 
 def searchForAssignment(assignment_name, course_id):
 
