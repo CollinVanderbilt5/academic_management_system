@@ -288,6 +288,9 @@ def add_assignment(course_id, title, description, point_value, due_date, type_, 
         cursor.close()
         connection.close()
 
+        return True   # <- return a boolean success flag
+
+
 
 def classGrade(course_id, student_id):
     pass
