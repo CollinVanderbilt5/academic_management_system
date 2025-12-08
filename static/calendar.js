@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   loadAssignments();
-
+  const permElem = document.getElementById("username");
+  const accountType = localStorage.getItem("account") || "Student";
+  permElem.textContent = accountType;
   // Setup filter checkbox listeners
   document.getElementById("filter-today").addEventListener("change", applyFilters);
   document.getElementById("filter-week").addEventListener("change", applyFilters);
