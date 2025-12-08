@@ -70,15 +70,19 @@ def addassign():
 # Add assignment to database
 @app.route("/api/add_assignment", methods=["POST"])
 def api_add_assignment():
-    data = request.get_json()
-    success = add_assignment(
-        data["course_id"],
-        data["title"],
-        data["description"],
-        data["point_value"],
-        data["due_date"]
-    )
-    return jsonify({"success": success})
+    data = request.json
+    course_id = data.get("course_id")
+    title = data.get("title")
+    description = data.get("description", "")
+    point_value = data.get("point_value", 0)
+    due_date = data.get("due_date")
+    type_ = data.get("type")
+    duration = data.get("duration")
+    room = data.get("room")
+    partners = data.get("partners")
+
+    result = add_assignment(course_id, title, description, point_value, due_date, type_, duration, room, partners)
+    return jsonify(result)
 
 
 @app.route('/advisinghold.html')
@@ -108,6 +112,27 @@ def api_drop_class():
     data = request.get_json()
     success = enrollClass(data["student_id"], data["course_id"]) 
     return jsonify({"success": success})
+
+@app.route("/api/get_hold", methods=["POST"])
+def api_get_hold():
+    data = request.get_json()
+    student_id = data.get("student_id")
+    if not student_id:
+        return jsonify({"success": False, "error": "Student ID missing"})
+    
+    result = getAdvisingHold(student_id)
+    return jsonify(result)
+
+@app.route("/api/edit_hold", methods=["POST"])
+def api_edit_hold():
+    data = request.get_json()
+    student_id = data.get("student_id")
+    # TODO: Replace 2 with actual logged-in advisor type check if needed
+    result = editHold(user_account_type=2, student_id=student_id)
+    if result is None:  # your current editHold doesn't return anything
+        # We can fetch the new value
+        result = getAdvisingHold(student_id)
+    return jsonify({"success": True, "advising_hold": result.get("advising_hold")})
 
 
 if __name__ == '__main__':

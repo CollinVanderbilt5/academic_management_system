@@ -35,6 +35,10 @@
       }
     </style>
     <script src="{{ url_for('static', filename='main.js') }}" defer></script>
+    <script
+      src="{{ url_for('static', filename='advisinghold.js') }}"
+      defer
+    ></script>
   </head>
   <body>
     <div id="title">
@@ -52,16 +56,15 @@
 
       <div class="form-content">
         <label>Enter Student ID</label>
-        <input type="text" value="18261532" />
+        <input type="text" id="advise-student-id" />
 
         <div class="status-text">
           This student's advising hold is set as:
-          <span class="true-status">True</span>
+          <span id="advise-status" class="true-status">Status</span>
         </div>
 
         <div class="button-row">
-          <button class="swap-btn">Swap</button>
-          <button class="exit-btn">Exit</button>
+          <button id="swap-btn" class="swap-btn">Swap</button>
         </div>
       </div>
     </div>
