@@ -255,9 +255,41 @@ def addAsignment(id : int):
     pass
 
 def organizeByDueDates():
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    query = "SELECT * FROM Assignment"
+    cursor.execute(query)
+    assignment_exists = cursor.fetchone()
+
+    if assignment_exists:
+        SELECT * FROM Assignment ORDER BY due_date ASC
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False, "message" : "No assignments"})
+    cursor.close()
+    connection.close()
     pass
 
 def organizeByClass():
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    query = "SELECT * FROM Assignment"
+    cursor.execute(query)
+    assignment_exists = cursor.fetchone()
+
+    if assignment_exists:
+        SELECT * FROM Assignment ORDER BY course_id ASC
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False, "message" : "No assignments"})
+    cursor.close()
+    connection.close()
     pass
 
 def highlightAssignment():
