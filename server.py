@@ -90,13 +90,13 @@ def enroll():
 @app.route("/api/enroll_class", methods=["POST"])
 def api_enroll_class():
     data = request.get_json()
-    success = enrollClass(sid=data["student_id"], course_id=data["course_id"])
+    success = enrollClass(data["student_id"], data["course_id"]) 
     return jsonify({"success": success})
 
 @app.route("/api/drop_class", methods=["POST"])
 def api_drop_class():
     data = request.get_json()
-    success = dropClass(sid=data["student_id"], course_id=data["course_id"])
+    success = enrollClass(data["student_id"], data["course_id"]) 
     return jsonify({"success": success})
 
 
