@@ -266,14 +266,10 @@ def highlightAssignment():
 def checkOffCheck():
     pass
 
-def searchForAssignment():
-    connection = get_connection()
-    if not connection:
-        return jsonify({"error": "DB connection failed"}), 500
-    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+def searchForAssignment(assignment_name, course_id):
 
-    assignment_name = input("Enter assignment name to search for: ")
-    course_id = input("Enter course ID to search in: ")
+    # assignment_name = input("Enter assignment name to search for: ")
+    # course_id = input("Enter course ID to search in: ")
     due_date : char
     point_value : int
     class_title : char 
@@ -333,13 +329,21 @@ def editHold(user_account_type : int, student_id : int):
 
 
 ## only call this function if you're running this file, otherwise this is skipped
-## This part opens the database and adds thing in the setup.sql file
+## Open and setups database with setup.sql
 if __name__ == "__main__":
     connection = get_connection()
 
     if not connection:
         Exception("Couldn't connect to database!")
-    
-    print("\"Hi\"")
 
+    sql_commands : str
+
+    with open('your_script.sql', 'r') as f:
+        sql_commands = f.read()
+
+    with connection.cursor() as cursor:
+        cursor.execute(sql_commands, multi=True) # Use multi=True for multiple statements
+        connection.commit() # Commit changes if the SQL commands modify the database
+
+    connection.close()
     
