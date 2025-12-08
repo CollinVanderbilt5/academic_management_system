@@ -1,6 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   const extraFields = document.getElementById("extra-fields");
   const submitBtn = document.getElementById("submit-assignment");
+  const permElem = document.getElementById("username");
+  const accountType = localStorage.getItem("account") || "Student";
+  permElem.textContent = accountType;
 
   document.querySelectorAll("input[name='type']").forEach(radio => {
     radio.addEventListener("change", () => {

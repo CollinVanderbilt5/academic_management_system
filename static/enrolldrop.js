@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const nameEl = document.getElementById("name");
-  const usernameEl = document.getElementById("username");
+  const permElem = document.getElementById("username");
+  const accountType = localStorage.getItem("account") || "Student";
+  permElem.textContent = accountType;
 
 
 

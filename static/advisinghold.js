@@ -2,6 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const studentInput = document.getElementById("advise-student-id");
   const swapBtn = document.getElementById("swap-btn");
   const statusSpan = document.getElementById("advise-status");
+  const permElem = document.getElementById("username");
+  const accountType = localStorage.getItem("account") || "Student";
+  permElem.textContent = accountType;
 
   // Hide the status at first
   statusSpan.parentElement.style.display = "none";
