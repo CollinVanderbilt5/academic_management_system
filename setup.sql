@@ -113,14 +113,23 @@ false, 1041, "basedstudent123");
 INSERT INTO Professor VALUES(1544, "Homer Simpson", 
 "Comp sci", "Comp Sci 302", "9/23/21", "B3stT3acher");
 
+INSERT INTO Assignment VALUES(4150, "AI Research Project", 30, 0, "Evolution of Artificial Intelligence", "2025-12-10", false);
+
+INSERT INTO Assignment VALUES(4150, "Quiz 1", 20, 0, "Machine Learning Basics", "2025-12-12", false);
+
 INSERT INTO Class VALUES(4150, "Intro to AI", 1544);
 
 INSERT INTO Class VALUES(4200, "Data Structures", 1544);
 
 INSERT INTO Is_in VALUES(1203, 4150, 88);
 
+INSERT INTO Quiz VALUES(4150, "Quiz 1", 45);
+
+INSERT INTO Project VALUES(4150, "AI Research Project", 3);
+
 Select * From Advisor;
 Select * From Student;
 select * from Class;
 select * from Professor;
 select * from Is_in;
+select * from Assignment;

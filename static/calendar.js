@@ -42,11 +42,10 @@ async function loadAssignments() {
   container.innerHTML = "Loading...";
 
   try {
-    const response = await fetch("/api/get_assignments"); // make sure server route calls get_all_assignments_json
+    const response = await fetch("/api/get_assignments"); 
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const data = await response.json();
-    console.log("Assignments data:", data); // debug what is coming from the API
 
     if (!data.success || !data.assignments || data.assignments.length === 0) {
       container.innerHTML = "<p>No assignments found.</p>";
