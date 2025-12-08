@@ -79,16 +79,19 @@ document.addEventListener("DOMContentLoaded", () => {
       payload.partners = partners;
     }
 
-    try {
-      const response = await fetch("/api/add_assignment", {
+    
+    const response = await fetch("/api/add_assignment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
-      });
+    });
 
-      const data = await response.json();
+    
+    const data = await response.json();
+    
 
-      if (data.success) {
+      if (data["success"]) {
+        console.log(data)
         msgBox.style.color = "green";
         msgBox.textContent = "Assignment added successfully!";
         document.getElementById("assign-course-id").value = "";
@@ -98,13 +101,10 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("assign-points").value = "";
         extraFields.innerHTML = "";
       } else {
+        console.log("Hey")
         msgBox.style.color = "red";
         msgBox.textContent = data.error || "Failed to add assignment. Check course ID.";
       }
-    } catch (err) {
-      console.error(err);
-      msgBox.style.color = "red";
-      msgBox.textContent = "Error sending request.";
-    }
+    
   });
 });

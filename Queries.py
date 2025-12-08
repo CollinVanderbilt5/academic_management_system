@@ -22,7 +22,7 @@ def get_connection():
 
 
 ## Takes ID, and Password. Searches database, returns a json filled with information of found table
-def login(id, pwd):
+def login(id : int, pwd):
     curr_id = id
     password = pwd
 
@@ -63,7 +63,7 @@ def login(id, pwd):
     else:
         cursor.close()
         connection.close()
-        return jsonify({"success": False, "user" : current_user, "account_type" : "Null"})
+        return jsonify({"success": False, "user" : current_user, "id" : curr_id ,"account_type" : "Null"})
 
 ## account type will be an enum, 0 = student, 1 = profesor, 2 =  advisor
 def addUser(user_account_type : int, account_to_add_type : int, id, password : str):
@@ -254,7 +254,6 @@ def dropClass(sid : int):
 
 
 def add_assignment(course_id, title, description, point_value, due_date):
-    try:
         connection = get_connection()
         if not connection:
             return False
@@ -280,44 +279,45 @@ def add_assignment(course_id, title, description, point_value, due_date):
         cursor.close()
         connection.close()
 
-        return True   # <- return a boolean success flag
-    except Exception as e:
-        print("Error adding assignment:", e)
-        return False
+        return {"success": True}   # <- return a boolean success flag
 
-def organizeByDueDates():
+
+def classGrade(course_id, student_id):
+    pass
+
+def organizeByDueDates(stu_id):
     connection = get_connection()
     if not connection:
         return jsonify({"error": "DB connection failed"}), 500
     cursor = connection.cursor()
 
-    query = "SELECT * FROM Assignment ORDER BY due_date ASC"
+    query = f"SELECT * FROM Assignment WHERE stud_id={stu_id} ORDER BY due_date ASC"
     cursor.execute(query)
-    assignment_exists = cursor.fetchone()
+    assignment_exists = cursor.fetchall()
 
     cursor.close()
     connection.close()
 
     if assignment_exists:
         # "SELECT * FROM Assignment ORDER BY due_date ASC"
-        return jsonify({"success": True})
+        return jsonify({"success": True, "assignments" : assignment_exists})
     else:
         return jsonify({"success": False, "message" : "No assignments"})
 
 
-def organizeByClass():
+def organizeByClass(stu_id):
     connection = get_connection()
     if not connection:
         return jsonify({"error": "DB connection failed"}), 500
     cursor = connection.cursor()
 
-    query = "SELECT * FROM Assignment ORDER BY course_id ASC"
+    query = f"SELECT * FROM Assignment WHERE stud_id={stu_id} course_id ASC"
     cursor.execute(query)
-    assignment_exists = cursor.fetchone()
+    assignment_exists = cursor.fetchall()
 
     if assignment_exists:
         #"SELECT * FROM Assignment ORDER BY course_id ASC"
-        return jsonify({"success": True})
+        return jsonify({"success": True, "assignments" : assignment_exists})
     else:
         return jsonify({"success": False, "message" : "No assignments"})
     cursor.close()
@@ -402,20 +402,20 @@ def editHold(user_account_type : int, student_id : int):
     if not fetch_check:
         return jsonify({"success": False, "error" : "student not found"})
 
-    query = f"select advising_hold from Student WHERE student_id={student_id}"
-    cursor.execute(query)
+    # query = f"select advising_hold from Student WHERE student_id={student_id}"
+    # cursor.execute(query)
 
     fetch_check = cursor.fetchone()
+
     ##update the student advising hold
     query = f"UPDATE Student SET advising_hold = NOT advising_hold WHERE student_id={student_id}"
     cursor.execute(query)
     cursor.close()
     connection.close()
-
     # else:
     #     return jsonify({"success": False, "error" : "invalid account type"})
 
-    # return jsonify({"success": True, "message" : "hold status updated"})
+    return jsonify({"success": True, "message" : "hold status updated"})
  
 
 # For calendar view: gets all assignments
@@ -434,7 +434,8 @@ def get_all_assignments():
         print("Error:", err)
         return []
 
-def get_all_assignments_json():
+##Bools check if you want to organize them, if date it will organize them by date, otherwise it will eb organized by classes
+def get_all_assignments_json(stud_id : int, organize : bool, date : bool):
     try:
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
@@ -451,6 +452,14 @@ def get_all_assignments_json():
 
         cursor.close()
         conn.close()
+
+
+        if organize:
+            if date:
+                return organizeByDueDates(stud_id)
+            else:
+                return organizeByClass(stud_id)
+
 
         return jsonify({"success": True, "assignments": rows})
 

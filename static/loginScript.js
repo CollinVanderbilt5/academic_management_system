@@ -26,10 +26,10 @@ function SendLoginRequest() {
 
 function data_to_switch(data) {
   console.log(data)
-
+  
   if (data["success"]) {
     localStorage.setItem("name", data["user"]);
-    localStorage.setItem("id", data["id"]);
+    localStorage.setItem("id", data["ID"]);
     localStorage.setItem("account", data["account_type"])
     window.location.href="/homepage"
   }

@@ -93,9 +93,13 @@ def advishold():
 def calender():
     return render_template("calendar.html")
 
-@app.route("/api/get_assignments")
+@app.route("/api/get_assignments", methods=["POST"])
 def get_assignments_route():
-    return get_all_assignments_json()
+    data = request.json
+    id = data.get("id")
+    sortDate = data.get("datesort")
+    sortClass = data.get("classsort")
+    return get_all_assignments_json(id, sortDate or sortClass, sortDate)
 
 @app.route('/enrolldrop.html')
 def enroll():

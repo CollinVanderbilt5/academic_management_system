@@ -6,19 +6,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const advising_hold = document.getElementById("advising")
   
-  let menu = document.getElementById('menu')
-  menu.style.display = 'none'
+  // let menu = document.getElementById('menu')
+  // menu.style.display = 'none'
 
-  if (username == 'null') {
-    menu.style.display = 'flex'
-    document.getElementById('name_input').addEventListener("keydown", function(event) {
-      if (event.key === "Enter") {
-        menu.style.display = 'none'
-        username = document.getElementById('name_input').value;
-        localStorage.setItem("name", username);
-      }
-    })
-  }
+  // if (username == 'null') {
+  //   menu.style.display = 'flex'
+  //   document.getElementById('name_input').addEventListener("keydown", function(event) {
+  //     if (event.key === "Enter") {
+  //       menu.style.display = 'none'
+  //       username = document.getElementById('name_input').value;
+  //       localStorage.setItem("name", username);
+  //     }
+  //   })
+  // }
 
   switch (account_type)
     {
@@ -27,7 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
         case "Professor":
             advising_hold.style.display = 'none'
     }
-
+  let retrieved_srting = localStorage.getItem("id")
+  console.log(localStorage["id"])
   console.log("localStorage contents:", localStorage);
 
   if (username) { 

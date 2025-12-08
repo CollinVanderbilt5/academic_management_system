@@ -85,11 +85,22 @@ async function loadAssignments() {
   const container = document.getElementById("assignments-container");
   container.innerHTML = "Loading...";
 
+  const user_id = parseInt(localStorage.getItem("id"))
+  console.log(user_id)
+  const sortdate = document.getElementById("sort-date")
+  const sortclass = document.getElementById("sort-class")
   try {
-    const response = await fetch("/api/get_assignments");
+    const response = await fetch("/api/get_assignments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({id : user_id, datesort : sortdate.checked, classort : sortclass.checked})
+    });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const data = await response.json();
+    console.log(data)
     if (!data.success || !data.assignments) {
       container.innerHTML = "<p>No assignments found.</p>";
       return;

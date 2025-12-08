@@ -56,12 +56,13 @@ swapBtn.addEventListener("click", async () => {
     return;
   }
 
+  console.log(studentID)
   try {
     // Send request to toggle advising hold
     const response = await fetch("/api/edit_hold", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ student_id: parseInt(studentID) })
+      body: JSON.stringify({ student_id : parseInt(studentID) })
     });
 
     const data = await response.json();
