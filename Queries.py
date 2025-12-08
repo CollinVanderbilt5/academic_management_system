@@ -291,7 +291,6 @@ def add_assignment(course_id, title, description, point_value, due_date, type_, 
         return True   # <- return a boolean success flag
 
 
-
 def classGrade(course_id, student_id):
     pass
 
@@ -301,18 +300,19 @@ def organizeByDueDates():
         return jsonify({"error": "DB connection failed"}), 500
     cursor = connection.cursor()
 
-    query = "SELECT * FROM Assignment"
+    query = "SELECT * FROM Assignment ORDER BY due_date ASC"
     cursor.execute(query)
     assignment_exists = cursor.fetchone()
 
+    cursor.close()
+    connection.close()
+
     if assignment_exists:
-        query = "SELECT * FROM Assignment ORDER BY due_date ASC"
+        # "SELECT * FROM Assignment ORDER BY due_date ASC"
         return jsonify({"success": True})
     else:
         return jsonify({"success": False, "message" : "No assignments"})
-    cursor.close()
-    connection.close()
-    pass
+
 
 def organizeByClass():
     connection = get_connection()
@@ -320,12 +320,12 @@ def organizeByClass():
         return jsonify({"error": "DB connection failed"}), 500
     cursor = connection.cursor()
 
-    query = "SELECT * FROM Assignment"
+    query = "SELECT * FROM Assignment ORDER BY course_id ASC"
     cursor.execute(query)
     assignment_exists = cursor.fetchone()
 
     if assignment_exists:
-        query = "SELECT * FROM Assignment ORDER BY course_id ASC"
+        #"SELECT * FROM Assignment ORDER BY course_id ASC"
         return jsonify({"success": True})
     else:
         return jsonify({"success": False, "message" : "No assignments"})
@@ -351,7 +351,7 @@ def gradeAverage(student_id, course_id):
 
     return jsonify({"success" : True, "grade" : grade})
 
-##Recieves the class average
+##Recieves the class average of a given course
 def classAverage(course_id):
     connection = get_connection()
     if not connection:
