@@ -62,6 +62,7 @@ ON UPDATE CASCADE
 
 CREATE TABLE Assignment (
 course_id 		INT,
+stu_id          INT,
 title			VARCHAR(50),
 point_value		INT,
 grade			INT,
@@ -70,6 +71,7 @@ due_date		VARCHAR(50),
 completed 		BOOLEAN,
 PRIMARY KEY (course_id, title),
 FOREIGN KEY (course_id) REFERENCES Class(course_id)
+FOREIGN KEY (stu_id) REFERENCES Student(student_id)
 ON DELETE CASCADE
 ON UPDATE CASCADE
 );
@@ -113,15 +115,21 @@ false, 1041, "basedstudent123");
 INSERT INTO Professor VALUES(1544, "Homer Simpson", 
 "Comp sci", "Comp Sci 302", "9/23/21", "B3stT3acher");
 
-INSERT INTO Assignment VALUES(4150, "AI Research Project", 30, 0, "Evolution of Artificial Intelligence", "2025-12-10", false);
+INSERT INTO Assignment VALUES(4150, 1203, "AI Research Project", 30, 0, "Evolution of Artificial Intelligence", "2025-12-10", false);
 
-INSERT INTO Assignment VALUES(4150, "Quiz 1", 20, 0, "Machine Learning Basics", "2025-12-12", false);
+INSERT INTO Assignment VALUES(4150, 1203, "Quiz 1", 20, 0, "Machine Learning Basics", "2025-12-12", false);
+
+INSERT INTO Assignment VALUES(4200, 1203, "Exam 1", 50, 0, "Linked Lists and Trees", "2025-12-15", false);
 
 INSERT INTO Class VALUES(4150, "Intro to AI", 1544);
 
 INSERT INTO Class VALUES(4200, "Data Structures", 1544);
 
 INSERT INTO Is_in VALUES(1203, 4150, 88);
+
+INSERT INTO Is_in VALUES(1203, 4200, 92);
+
+INSERT INTO Exam VALUES(4150, "Exam 1", "CS101");
 
 INSERT INTO Quiz VALUES(4150, "Quiz 1", 45);
 
