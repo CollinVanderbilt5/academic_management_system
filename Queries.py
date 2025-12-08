@@ -349,16 +349,6 @@ def editHold(user_account_type : int, student_id : int):
     if not fetch_check:
         return jsonify({"success": False, "error" : "student not found"})
 
-<<<<<<< HEAD
-    query = "UPDATE Student SET advising_hold = NOT advising_hold WHERE student_id=%s"
-    cursor.execute(query, (student_id,))
-    connection.commit()
-    cursor.close()
-    connection.close()
-
-    return jsonify({"success": True, "message": "hold status updated"})
-    pass
-=======
     query = f"select advising_hold from Student WHERE student_id={student_id}"
     cursor.execute(query)
 
@@ -374,7 +364,6 @@ def editHold(user_account_type : int, student_id : int):
 
     # return jsonify({"success": True, "message" : "hold status updated"})
  
->>>>>>> 1d3f5a584e2b2700cde815592feb624578faa31b
 
 # For calendar view: gets all assignments
 def get_all_assignments():

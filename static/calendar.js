@@ -1,6 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   loadAssignments();
+
+  // Setup filter checkbox listeners
+  document.getElementById("filter-today").addEventListener("change", applyFilters);
+  document.getElementById("filter-week").addEventListener("change", applyFilters);
 });
+
+let ALL_ASSIGNMENTS = []; // store original full list
 
 function renderAssignment(a) {
   const div = document.createElement("div");
@@ -16,9 +22,7 @@ function renderAssignment(a) {
 
   if (dueDate < now) {
     warning = `<span class="due-warning">Past due date. Mark complete?</span>`;
-  } else if (
-    dueDate.toDateString() === now.toDateString()
-  ) {
+  } else if (dueDate.toDateString() === now.toDateString()) {
     highlight = `<span class="highlight">Due Today</span>`;
   } else if (dueDate < oneWeekFromNow) {
     highlight = `<span class="highlight">Due This Week</span>`;
@@ -42,23 +46,60 @@ async function loadAssignments() {
   container.innerHTML = "Loading...";
 
   try {
-    const response = await fetch("/api/get_assignments"); 
+    const response = await fetch("/api/get_assignments");
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
     const data = await response.json();
-
-    if (!data.success || !data.assignments || data.assignments.length === 0) {
+    if (!data.success || !data.assignments) {
       container.innerHTML = "<p>No assignments found.</p>";
       return;
     }
 
-    container.innerHTML = "";
-    data.assignments.forEach(assign => {
-      const box = renderAssignment(assign);
-      container.appendChild(box);
-    });
+    // Save data globally
+    ALL_ASSIGNMENTS = data.assignments;
+
+    applyFilters(); // render with filters applied
+
   } catch (err) {
     console.error("Error fetching assignments:", err);
     container.innerHTML = `<p>Error loading assignments: ${err.message}</p>`;
   }
+}
+
+function applyFilters() {
+  const container = document.getElementById("assignments-container");
+  container.innerHTML = "";
+
+  const todayChecked = document.getElementById("filter-today").checked;
+  const weekChecked = document.getElementById("filter-week").checked;
+
+  const now = new Date();
+  const oneWeekFromNow = new Date();
+  oneWeekFromNow.setDate(now.getDate() + 7);
+
+  let list = [...ALL_ASSIGNMENTS];
+
+  // Filter: Due Today
+  if (todayChecked) {
+    list = list.filter(a => {
+      const d = new Date(a.due_date);
+      return d.toDateString() === now.toDateString();
+    });
+  }
+
+  // Filter: Due This Week
+  if (weekChecked) {
+    list = list.filter(a => {
+      const d = new Date(a.due_date);
+      return d >= now && d < oneWeekFromNow;
+    });
+  }
+
+  // Render assignment list
+  if (list.length === 0) {
+    container.innerHTML = "<p>No assignments match your filters.</p>";
+    return;
+  }
+
+  list.forEach(assign => container.appendChild(renderAssignment(assign)));
 }
