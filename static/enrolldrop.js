@@ -2,8 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const nameEl = document.getElementById("name");
   const usernameEl = document.getElementById("username");
 
-  nameEl.textContent = localStorage.getItem("name") || "John Doe";
-  usernameEl.textContent = localStorage.getItem("account") || "Student";
+
 
   const enrollCheckbox = document.getElementById("enroll-checkbox");
   const dropCheckbox = document.getElementById("drop-checkbox");

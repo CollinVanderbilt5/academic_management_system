@@ -1,131 +1,86 @@
-// addAssignment.js
-
-// Parse a YYYY-MM-DD string as a local date to avoid timezone issues
-function parseLocalDate(raw) {
-  if (!raw) return null;
-  const [year, month, day] = raw.split("-").map(Number);
-  return new Date(year, month - 1, day);
-}
-
-// Format date for display
-function formatDate(raw) {
-  const date = parseLocalDate(raw);
-  if (!date) return "No date";
-
-  const now = new Date();
-  const oneWeekFromNow = new Date();
-  oneWeekFromNow.setDate(now.getDate() + 7);
-
-  let warning = "";
-  let highlight = "";
-
-  if (date < now) {
-    warning = `<span class="due-warning">Past due date. Mark complete?</span>`;
-  } else if (
-    date.getDate() === now.getDate() &&
-    date.getMonth() === now.getMonth() &&
-    date.getFullYear() === now.getFullYear()
-  ) {
-    highlight = `<span class="highlight">Due Today</span>`;
-  } else if (date < oneWeekFromNow) {
-    highlight = `<span class="highlight">Due This Week</span>`;
-  }
-
-  return `${date.toLocaleDateString("en-US", {
-    weekday: "long",
-    month: "long",
-    day: "numeric",
-    year: "numeric"
-  })} ${highlight} ${warning}`;
-}
-
-// Render a single assignment box
-function renderAssignment(a) {
-  const div = document.createElement("div");
-  div.classList.add("assignment-box");
-
-  const formattedDate = formatDate(a.due_date);
-
-  div.innerHTML = `
-      <div><strong>${a.title}</strong></div>
-      <div>Due: ${formattedDate}</div>
-  `;
-
-  return div;
-}
-
-// Load assignments from backend
-async function loadAssignments() {
-  const container = document.getElementById("assignments-container");
-  container.innerHTML = "Loading...";
-
-  try {
-    const response = await fetch("/api/get_assignments");
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-
-    const data = await response.json();
-
-    if (!data.success || !data.assignments || data.assignments.length === 0) {
-      container.innerHTML = "<p>No assignments found.</p>";
-      return;
-    }
-
-    container.innerHTML = "";
-    data.assignments.forEach(assign => {
-      const box = renderAssignment(assign);
-      container.appendChild(box);
-    });
-  } catch (err) {
-    console.error("Error fetching assignments:", err);
-    container.innerHTML = "<p>Error loading assignments.</p>";
-  }
-}
-
-// Populate user info in header
-function populateUserInfo() {
-  const nameElem = document.getElementById("name");
-  const permElem = document.getElementById("username");
-
-  const userName = localStorage.getItem("name");
-  const accountType = localStorage.getItem("account");
-
-  if (nameElem) nameElem.textContent = userName || "John Doe";
-  if (permElem) permElem.textContent = accountType || "Student";
-}
-
-// Main DOM logic
 document.addEventListener("DOMContentLoaded", () => {
-  populateUserInfo();
+  const extraFields = document.getElementById("extra-fields");
+  const submitBtn = document.getElementById("submit-assignment");
 
-  const btn = document.getElementById("submit-assignment");
-  if (!btn) return;
+  document.querySelectorAll("input[name='type']").forEach(radio => {
+    radio.addEventListener("change", () => {
+      extraFields.innerHTML = "";
+      const type = radio.value;
+      if (type === "Quiz") {
+        extraFields.innerHTML = `
+          <label>Duration (minutes)</label>
+          <input type="number" id="quiz-duration" min="1" />
+        `;
+      } else if (type === "Exam") {
+        extraFields.innerHTML = `
+          <label>Room</label>
+          <input type="text" id="exam-room" />
+        `;
+      } else if (type === "Project") {
+        extraFields.innerHTML = `
+          <label>Number of Group Members</label>
+          <input type="number" id="project-partners" min="1" />
+        `;
+      }
+    });
+  });
 
-  btn.addEventListener("click", async () => {
+  submitBtn.addEventListener("click", async () => {
     const course_id = parseInt(document.getElementById("assign-course-id").value.trim());
     const title = document.getElementById("assign-title").value.trim();
-    const due_date_input = document.getElementById("assign-due-date").value;
+    const due_date = document.getElementById("assign-due-date").value;
     const description = document.getElementById("assign-desc").value.trim();
-
+    const point_value = parseInt(document.getElementById("assign-points").value.trim());
     const msgBox = document.getElementById("assign-message");
-    msgBox.textContent = ""; // clear old messages
+    msgBox.textContent = "";
 
-    if (!course_id || isNaN(course_id) || !title || !due_date_input) {
+    const typeRadio = document.querySelector("input[name='type']:checked");
+    if (!typeRadio) {
+      msgBox.style.color = "red";
+      msgBox.textContent = "Please select an assignment type.";
+      return;
+    }
+    const type = typeRadio.value;
+
+    if (!course_id || !title || !due_date || isNaN(point_value)) {
       msgBox.style.color = "red";
       msgBox.textContent = "Please fill out all required fields correctly.";
       return;
+    }
+
+    const payload = { course_id, title, description, point_value, due_date, type };
+
+    if (type === "Quiz") {
+      const duration = parseInt(document.getElementById("quiz-duration")?.value);
+      if (!duration || duration <= 0) {
+        msgBox.style.color = "red";
+        msgBox.textContent = "Please enter a valid duration for the quiz.";
+        return;
+      }
+      payload.duration = duration;
+    } else if (type === "Exam") {
+      const room = document.getElementById("exam-room")?.value.trim();
+      if (!room) {
+        msgBox.style.color = "red";
+        msgBox.textContent = "Please enter a room for the exam.";
+        return;
+      }
+      payload.room = room;
+    } else if (type === "Project") {
+      const partners = parseInt(document.getElementById("project-partners")?.value);
+      if (!partners || partners <= 0) {
+        msgBox.style.color = "red";
+        msgBox.textContent = "Please enter number of group members for the project.";
+        return;
+      }
+      payload.partners = partners;
     }
 
     try {
       const response = await fetch("/api/add_assignment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          course_id,
-          title,
-          description,
-          point_value: 0,
-          due_date: due_date_input
-        })
+        body: JSON.stringify(payload)
       });
 
       const data = await response.json();
@@ -133,17 +88,15 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data.success) {
         msgBox.style.color = "green";
         msgBox.textContent = "Assignment added successfully!";
-
-        // Clear fields
         document.getElementById("assign-course-id").value = "";
         document.getElementById("assign-title").value = "";
         document.getElementById("assign-due-date").value = "";
         document.getElementById("assign-desc").value = "";
-
-        loadAssignments(); // refresh calendar
+        document.getElementById("assign-points").value = "";
+        extraFields.innerHTML = "";
       } else {
         msgBox.style.color = "red";
-        msgBox.textContent = "Failed to add assignment. Check course ID.";
+        msgBox.textContent = data.error || "Failed to add assignment. Check course ID.";
       }
     } catch (err) {
       console.error(err);
@@ -151,6 +104,4 @@ document.addEventListener("DOMContentLoaded", () => {
       msgBox.textContent = "Error sending request.";
     }
   });
-
-  loadAssignments(); // initial load
 });

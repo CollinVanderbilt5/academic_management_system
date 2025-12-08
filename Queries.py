@@ -253,38 +253,41 @@ def dropClass(sid : int):
 
 
 
-def add_assignment(course_id, title, description, point_value, due_date):
+def add_assignment(course_id, title, description, point_value, due_date, type_, duration=None, room=None, partners=None):
+    connection = get_connection()
+    if not connection:
+        return {"success": False, "error": "DB connection failed"}
+    cursor = connection.cursor()
+
     try:
-        connection = get_connection()
-        if not connection:
-            return False
-
-        cursor = connection.cursor()
-
+        # Insert into Assignment table
         query = """
             INSERT INTO Assignment (course_id, title, point_value, grade, description, due_date, completed)
             VALUES (%s, %s, %s, %s, %s, %s, %s)
         """
+        cursor.execute(query, (course_id, title, point_value, 0, description, due_date, False))
 
-        cursor.execute(query, (
-            course_id,
-            title,
-            point_value,
-            0,                # grade default 0
-            description,
-            due_date,
-            False             # completed default false
-        ))
+        # Insert into type-specific tables
+        if type_ == "Quiz" and duration is not None:
+            cursor.execute("INSERT INTO Quiz (course_id, title, duration) VALUES (%s, %s, %s)", 
+                           (course_id, title, duration))
+        elif type_ == "Exam" and room is not None:
+            cursor.execute("INSERT INTO Exam (course_id, title, room) VALUES (%s, %s, %s)",
+                           (course_id, title, room))
+        elif type_ == "Project" and partners is not None:
+            cursor.execute("INSERT INTO Project (course_id, title, partners) VALUES (%s, %s, %s)",
+                           (course_id, title, partners))
 
         connection.commit()
+        return {"success": True}
+    except Exception as e:
+        print("Error adding assignment:", e)
+        connection.rollback()
+        return {"success": False, "error": str(e)}
+    finally:
         cursor.close()
         connection.close()
 
-        return True   # <- return a boolean success flag
-
-    except mysql.connector.Error as err:
-        print("Error:", err)
-        return False
 
 
 
@@ -292,9 +295,6 @@ def organizeByDueDates():
     pass
 
 def organizeByClass():
-    pass
-
-def highlightAssignment():
     pass
 
 def checkOffCheck():
@@ -358,12 +358,29 @@ def editHold(user_account_type : int, student_id : int):
     cursor.execute(query)
     cursor.close()
     connection.close()
-
+    return getAdvisingHold(student_id)
     # else:
     #     return jsonify({"success": False, "error" : "invalid account type"})
 
     # return jsonify({"success": True, "message" : "hold status updated"})
  
+def getAdvisingHold(student_id: int):
+    connection = get_connection()
+    if not connection:
+        return {"success": False, "error": "DB connection failed"}
+
+    cursor = connection.cursor(dictionary=True)
+    query = f"SELECT advising_hold FROM Student WHERE student_id={student_id}"
+    cursor.execute(query)
+    result = cursor.fetchone()
+    cursor.close()
+    connection.close()
+
+    if result is None:
+        return {"success": False, "error": "Student not found"}
+    else:
+        return {"success": True, "advising_hold": bool(result["advising_hold"])}
+
 
 # For calendar view: gets all assignments
 def get_all_assignments():

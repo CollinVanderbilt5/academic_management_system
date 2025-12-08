@@ -14,6 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=TASA+Explorer:wght@400..800&display=swap"
       rel="stylesheet"
     />
+    <script src="{{ url_for('static', filename='main.js') }}" defer></script>
     <script
       src="{{ url_for('static', filename='addAssignment.js') }}"
       defer
@@ -45,6 +46,21 @@
 
         <label>Enter Description</label>
         <textarea rows="3" id="assign-desc"></textarea>
+
+        <label>Point Value</label>
+        <input type="number" id="assign-points" min="0" />
+
+        <label>Assignment Type</label>
+        <div id="assignment-type">
+          <input type="radio" name="type" id="homework" value="Homework" />
+          Homework
+          <input type="radio" name="type" id="quiz" value="Quiz" /> Quiz
+          <input type="radio" name="type" id="exam" value="Exam" /> Exam
+          <input type="radio" name="type" id="project" value="Project" />
+          Project
+        </div>
+
+        <div id="extra-fields" style="margin-top: 10px"></div>
 
         <button id="submit-assignment" class="swap-btn">Submit</button>
         <p

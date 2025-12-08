@@ -1,16 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-<<<<<<< HEAD
+    <title>Whiteboard Add/Remove User</title>
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='forms.css') }}"
     />
-=======
-    <title>Whiteboard Add and Remove User</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='forms.css')}}" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='login.css')}}" />
->>>>>>> 1d3f5a584e2b2700cde815592feb624578faa31b
     <link
       href="https://fonts.googleapis.com/css2?family=Limelight&display=swap"
       rel="stylesheet"
@@ -19,11 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=TASA+Explorer:wght@400..800&display=swap"
       rel="stylesheet"
     />
-<<<<<<< HEAD
     <script src="{{ url_for('static', filename='main.js') }}" defer></script>
-=======
     <script defer src="{{ url_for('static', filename='adduser.js') }}"></script>
->>>>>>> 1d3f5a584e2b2700cde815592feb624578faa31b
   </head>
 
   <body>
@@ -32,18 +24,17 @@
       <h1 id="whiteboard">Whiteboard</h1>
       <div id="username">Student</div>
     </div>
+
     <div id="back-button">
-      <a href="{{ url_for('homepage') }}" class="back-button"
-        ><p>Back to Homepage</p></a
-      >
+      <a href="{{ url_for('homepage') }}"><p>Back to Homepage</p></a>
     </div>
+
     <div class="form-box">
       <div class="form-header">Add/Remove User</div>
-
       <div class="form-content">
         <div class="form-row">
-          <button id="add" class="login-button"> Add</button>
-          <button id="remove" class="login-button"> Delete</button>
+          <button id="add" class="login-button">Add</button>
+          <button id="remove" class="login-button">Delete</button>
         </div>
 
         <div class="form-row">
@@ -62,7 +53,9 @@
         <label>Enter Password</label>
         <input id="password" type="password" />
 
-        <label>Confirm Password <a id="warning" style="color: red"></a></label>
+        <label
+          >Confirm Password <span id="warning" style="color: red"></span
+        ></label>
         <input id="password_confirm" type="password" />
       </div>
     </div>
