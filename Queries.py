@@ -289,7 +289,8 @@ def add_assignment(course_id, title, description, point_value, due_date, type_, 
         connection.close()
 
 
-
+def classGrade(course_id, student_id):
+    pass
 
 def organizeByDueDates():
     connection = get_connection()
@@ -329,6 +330,45 @@ def organizeByClass():
     connection.close()
     pass
 
+##Get's the average grade of a student in the class, this can also be used to update the Is_in table
+def gradeAverage(student_id, course_id):
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    query = f" SELECT (sum(grade) / sum(point_value)) * 100 from Assignment where stu_id={student_id} AND course_id={course_id}"
+
+    cursor.execute(query)
+
+    grade = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    return jsonify({"success" : True, "grade" : grade})
+
+##Recieves the class average
+def classAverage(course_id):
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    query = f" SELECT avg(grade) from Is_in where course_id={course_id}"
+
+    cursor.execute(query)
+
+    average = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    return jsonify({"success" : True, "grade" : average})
+    
+def highlightAssignment():
+    pass
+
 def checkOffCheck():
     pass
 
@@ -354,14 +394,11 @@ def searchForAssignment(assignment_name, course_id):
         connection.close()
         print(assignment_name, due_date, point_value, class_title, sep=', ', end='end')
         return jsonify({"success": True, "assignment_name" : assignment_name, "course_id" : assignment['course_id'], "due_date" : assignment['due_date'], "point_value" : assignment['point_value'], "class_title" : class_title})
-
-
     else:
         return jsonify({"success": False, "error" : "assignment not found"})
     pass
 
 def editHold(user_account_type : int, student_id : int):
-
     connection = get_connection()
     if not connection:
         return jsonify({"error": "DB connection failed"}), 500

@@ -62,6 +62,7 @@ ON UPDATE CASCADE
 
 CREATE TABLE Assignment (
 course_id 		INT,
+stu_id      INT,
 title			VARCHAR(50),
 point_value		INT,
 grade			INT,
@@ -70,6 +71,7 @@ due_date		VARCHAR(50),
 completed 		BOOLEAN,
 PRIMARY KEY (course_id, title),
 FOREIGN KEY (course_id) REFERENCES Class(course_id)
+FOREIGN KEY (stu_id) REFERENCES Student(student_id)
 ON DELETE CASCADE
 ON UPDATE CASCADE
 );
