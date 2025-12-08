@@ -281,10 +281,6 @@ def add_assignment(course_id, title, description, point_value, due_date):
 
         return {"success": True}   # <- return a boolean success flag
 
-
-def classGrade(course_id, student_id):
-    pass
-
 def organizeByDueDates(stu_id):
     connection = get_connection()
     if not connection:
