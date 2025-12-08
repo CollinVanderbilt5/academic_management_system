@@ -115,19 +115,28 @@ false, 1041, "basedstudent123");
 INSERT INTO Professor VALUES(1544, "Homer Simpson", 
 "Comp sci", "Comp Sci 302", "9/23/21", "B3stT3acher");
 
+INSERT INTO Professor VALUES(1383, "Robert Robertson", 
+"Comp sci", "Comp Sci 301", "9/25/19", "il0v3c0mput3r5");
+
 INSERT INTO Assignment VALUES(4150, 1203, "AI Research Project", 30, 0, "Evolution of Artificial Intelligence", "2025-12-10", false);
 
 INSERT INTO Assignment VALUES(4150, 1203, "Quiz 1", 20, 0, "Machine Learning Basics", "2025-12-12", false);
 
 INSERT INTO Assignment VALUES(4200, 1203, "Exam 1", 50, 0, "Linked Lists and Trees", "2025-12-15", false);
 
+INSERT INTO Assignment VALUES(3800, 1203, "Homework 1", 25, 0, "Scheduling Algorithm Practice", "2025-12-20", false);
+
 INSERT INTO Class VALUES(4150, "Intro to AI", 1544);
 
 INSERT INTO Class VALUES(4200, "Data Structures", 1544);
 
+INSERT INTO Class VALUES(3800, "Operating Systems", 1383);
+
 INSERT INTO Is_in VALUES(1203, 4150, 88);
 
 INSERT INTO Is_in VALUES(1203, 4200, 92);
+
+INSERT INTO Is_in VALUES(1203, 3800, 89);
 
 INSERT INTO Exam VALUES(4150, "Exam 1", "CS101");
 
