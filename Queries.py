@@ -281,20 +281,96 @@ def add_assignment(course_id, title, description, point_value, due_date):
         connection.close()
 
         return True   # <- return a boolean success flag
-
-    except mysql.connector.Error as err:
-        print("Error:", err)
+    except Exception as e:
+        print("Error adding assignment:", e)
         return False
 
 
+def classGrade(course_id, student_id):
+    pass
 
-
-
-def searchForAssignment():
+def organizeByDueDates():
     connection = get_connection()
     if not connection:
         return jsonify({"error": "DB connection failed"}), 500
-    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
+    cursor = connection.cursor()
+
+    query = "SELECT * FROM Assignment ORDER BY due_date ASC"
+    cursor.execute(query)
+    assignment_exists = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    if assignment_exists:
+        # "SELECT * FROM Assignment ORDER BY due_date ASC"
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False, "message" : "No assignments"})
+
+
+def organizeByClass():
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    query = "SELECT * FROM Assignment ORDER BY course_id ASC"
+    cursor.execute(query)
+    assignment_exists = cursor.fetchone()
+
+    if assignment_exists:
+        #"SELECT * FROM Assignment ORDER BY course_id ASC"
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False, "message" : "No assignments"})
+    cursor.close()
+    connection.close()
+    pass
+
+##Get's the average grade of a student in the class, this can also be used to update the Is_in table
+def gradeAverage(student_id, course_id):
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    query = f" SELECT (sum(grade) / sum(point_value)) * 100 from Assignment where stu_id={student_id} AND course_id={course_id}"
+
+    cursor.execute(query)
+
+    grade = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    return jsonify({"success" : True, "grade" : grade})
+
+##Recieves the class average of a given course
+def classAverage(course_id):
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    query = f" SELECT avg(grade) from Is_in where course_id={course_id}"
+
+    cursor.execute(query)
+
+    average = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    return jsonify({"success" : True, "grade" : average})
+    
+def highlightAssignment():
+    pass
+
+def checkOffCheck():
+    pass
+
+def searchForAssignment(assignment_name, course_id):
 
     assignment_name = input("Enter assignment name to search for: ")
     course_id = input("Enter course ID to search in: ")
@@ -316,14 +392,11 @@ def searchForAssignment():
         connection.close()
         print(assignment_name, due_date, point_value, class_title, sep=', ', end='end')
         return jsonify({"success": True, "assignment_name" : assignment_name, "course_id" : assignment['course_id'], "due_date" : assignment['due_date'], "point_value" : assignment['point_value'], "class_title" : class_title})
-
-
     else:
         return jsonify({"success": False, "error" : "assignment not found"})
     pass
 
 def editHold(user_account_type : int, student_id : int):
-
     connection = get_connection()
     if not connection:
         return jsonify({"error": "DB connection failed"}), 500
@@ -414,13 +487,21 @@ def getAdvisingHold(student_id: int):
 
 
 ## only call this function if you're running this file, otherwise this is skipped
-## This part opens the database and adds thing in the setup.sql file
+## Open and setups database with setup.sql
 if __name__ == "__main__":
     connection = get_connection()
 
     if not connection:
         Exception("Couldn't connect to database!")
-    
-    print("\"Hi\"")
 
+    sql_commands : str
+
+    with open('your_script.sql', 'r') as f:
+        sql_commands = f.read()
+
+    with connection.cursor() as cursor:
+        cursor.execute(sql_commands, multi=True) # Use multi=True for multiple statements
+        connection.commit() # Commit changes if the SQL commands modify the database
+
+    connection.close()
     

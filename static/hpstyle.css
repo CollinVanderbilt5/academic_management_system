@@ -91,3 +91,32 @@ body {
     text-decoration: none;
     padding: 20px;
 }
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 120px;
+    background: skyblue;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: 0.2s;
+    font-family: "Tasa Explorer", sans-serif;
+    color: rgb(35, 98, 122);
+    text-align: center;
+
+    position: relative;
+    top: 10%;
+    left: 42%;
+}
+
+.show {
+  opacity: 1;
+}
+
+.menu-div {
+  opacity: 0;
+  transition: opacity 0.6s linear;
+}

@@ -62,7 +62,7 @@ ON UPDATE CASCADE
 
 CREATE TABLE Assignment (
 course_id 		INT,
-stu_id          INT,
+stu_id      INT,
 title			VARCHAR(50),
 point_value		INT,
 grade			INT,
