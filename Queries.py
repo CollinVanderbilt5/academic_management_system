@@ -213,12 +213,12 @@ def enrollClass(advising_hold : bool, sid : int):
     if advising_hold:
         return jsonify({"success": False, "message" : "Unable to enroll due to advising hold", "sid" : sid}), 500
     else:
-        query = "SELECT course_id FROM Class WHERE course_id=%s"
-        cursor.execute(query, (course_id_input,))
+        query = f"SELECT course_id FROM Class WHERE course_id={sid}"
+        cursor.execute(query)
         course_exist = cursor.fetchone()
-    
+        course_id = course_exist[0]
         if course_exist:
-            query_insert = "INSERT INTO Is_in VALUES(sid, course_id, 100)"
+            query_insert = f"INSERT INTO Is_in VALUES({sid}, {course_id}, 100)"
             cursor.execute(query_insert)
             cursor.commit()
             return jsonify({"success": True, "course_id" : course_id_input, "sid" : sid})
