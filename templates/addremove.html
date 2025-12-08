@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html>
   <head>
+<<<<<<< HEAD
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='forms.css') }}"
     />
+=======
+    <title>Whiteboard Add and Remove User</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='forms.css')}}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css')}}" />
+>>>>>>> 1d3f5a584e2b2700cde815592feb624578faa31b
     <link
       href="https://fonts.googleapis.com/css2?family=Limelight&display=swap"
       rel="stylesheet"
@@ -13,8 +19,13 @@
       href="https://fonts.googleapis.com/css2?family=TASA+Explorer:wght@400..800&display=swap"
       rel="stylesheet"
     />
+<<<<<<< HEAD
     <script src="{{ url_for('static', filename='main.js') }}" defer></script>
+=======
+    <script defer src="{{ url_for('static', filename='adduser.js') }}"></script>
+>>>>>>> 1d3f5a584e2b2700cde815592feb624578faa31b
   </head>
+
   <body>
     <div id="title">
       <div id="name">John Doe</div>
@@ -31,14 +42,14 @@
 
       <div class="form-content">
         <div class="form-row">
-          <div><input type="checkbox" /> Add</div>
-          <div><input type="checkbox" /> Delete</div>
+          <button id="add" class="login-button"> Add</button>
+          <button id="remove" class="login-button"> Delete</button>
         </div>
 
         <div class="form-row">
-          <div><input type="checkbox" /> Student</div>
-          <div><input type="checkbox" /> Professor</div>
-          <div><input type="checkbox" /> Advisor</div>
+          <div><input id="stu" type="checkbox" /> Student</div>
+          <div><input id="prof" type="checkbox" /> Professor</div>
+          <div><input id="adv" type="checkbox" /> Advisor</div>
         </div>
 
         <div class="note">
@@ -46,13 +57,13 @@
         </div>
 
         <label>Enter ID</label>
-        <input type="text" />
+        <input id="ID" type="text" />
 
         <label>Enter Password</label>
-        <input type="password" />
+        <input id="password" type="password" />
 
-        <label>Confirm Password</label>
-        <input type="password" />
+        <label>Confirm Password <a id="warning" style="color: red"></a></label>
+        <input id="password_confirm" type="password" />
       </div>
     </div>
   </body>

@@ -41,6 +41,16 @@ def userLogin():
     data = request.get_json()
     return login(data.get("username"), data.get("password"))
 
+@app.route('/adduser', methods=['POST'])
+def add_user():
+    data = request.get_json()
+    return addUser(data.get("account_type"), data.get("add_type"), data.get("add_id"), data.get("add_pass"))
+
+@app.route('/removeuser', methods=['POST'])
+def remove_user():
+    data = request.get_json()
+    return deleteUser(data.get("account_type"), data.get("add_type"), data.get("add_id"))
+
 @app.route('/homepage')
 def homepage():
     return render_template("homepage.html")

@@ -60,20 +60,16 @@ def login(id, pwd):
         cursor.close()
         connection.close()
         return jsonify({"success": True, "user" : current_user['name'], "id" : curr_id, "account_type" : "Advisor"})
-
-
     else:
-        return jsonify({"success": False, "user" : current_user, "account_type" : "Null"}), 500
-    
-
-def signUp(user, name, pwd):
-    pass
+        cursor.close()
+        connection.close()
+        return jsonify({"success": False, "user" : current_user, "account_type" : "Null"})
 
 ## account type will be an enum, 0 = student, 1 = profesor, 2 =  advisor
-def addUser(user_account_type : int, account_to_add_type : int, id, password):
+def addUser(user_account_type : int, account_to_add_type : int, id, password : str):
     
     ## Makes it so accounts can't edit any accoint on a higher tier
-    if account_to_add_type < user_account_type: 
+    if account_to_add_type > user_account_type: 
         return jsonify({"success": False, "error" : "can't add account higher than your own"})
     
     connection = get_connection()
@@ -83,25 +79,46 @@ def addUser(user_account_type : int, account_to_add_type : int, id, password):
     cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
     query = None
 
+
+    ## First check if the account already exist
     match account_to_add_type:
         case 0:
-            query = f"INSERT into Student({id}, NULL, NULL, NULL, {password})"
+           query = f"SELECT * FROM Student WHERE student_id={id};"
         case 1:
-            query = f"INSERT into Professor({id}, NULL, NULL, NULL, NULL,{password})"
+            query = f"SELECT * FROM Student WHERE student_id={id}"
         case 2:
-            query = f"INSERT into Advisor({id}, NULL, NULL, NULL, NULL,{password})"
+            query = f"SELECT * FROM Student WHERE student_id={id}"
 
     if query:
         cursor.execute(query)
+
+    check = cursor.fetchone()
+
+    if check:
+        cursor.close()
+        connection.close()
+        return jsonify({"success": False, "error": "User ID Already exists"})
+        
+    match account_to_add_type:
+        case 0:
+            query = f"INSERT into Student (student_id, password) Values({id}, \"{password}\")"
+        case 1:
+            query = f"INSERT into Professor (prof_id, password) Values({id} ,\"{password}\")"
+        case 2:
+            query = f"INSERT into Advisor (advisor_id, password) Values({id},\"{password}\")"
+
+    if query:
+        cursor.execute(query)
+        connection.commit()
     
     ## We just search for the user we added to see if the change worked
     match account_to_add_type:
         case 0:
-            query = f"INSERT into Student({id}, NULL, NULL, NULL, {password})"
+           query = f"SELECT * FROM Student WHERE student_id={id} AND password=\"{password}\";"
         case 1:
-            query = f"INSERT into Professor({id}, NULL, NULL, NULL, NULL,{password})"
+            query = f"SELECT * FROM Student WHERE student_id={id} AND password=\"{password}\""
         case 2:
-            query = f"INSERT into Advisor({id}, NULL, NULL, NULL, NULL,{password})"
+            query = f"SELECT * FROM Student WHERE student_id={id} AND password=\"{password}\""
 
     if query:
         cursor.execute(query)
@@ -114,36 +131,76 @@ def addUser(user_account_type : int, account_to_add_type : int, id, password):
         connection.close()
         return jsonify({"success" : True})
     else:
+        cursor.close()
+        connection.close()
         return jsonify({"success": False, "error": "DB insertion failed"}), 500
+    
+    
 
 ## account type will be an enum, 0 = student, 1 = profesor, 2 =  advisor
 def deleteUser(user_account_type : int, account_to_delete_type : int, id : int):
     
     ## Makes it so accounts can't edit any accoint on a higher tier
-    if account_to_delete_type < user_account_type: 
+    if account_to_delete_type > user_account_type: 
         return jsonify({"success": False, "error" : "can't add account higher than your own"})
 
     connection = get_connection()
     if not connection:
         return jsonify({"error": "DB connection failed"}), 500
-    
     cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
     
-    if user_account_type == 0 : ##stuent account
-        query = "DELETE FROM Student WHERE student_id=id"
+    ## First check if the account already exist
+    match account_to_delete_type:
+        case 0:
+           query = f"SELECT * FROM Student WHERE student_id={id};"
+        case 1:
+            query = f"SELECT * FROM Student WHERE student_id={id}"
+        case 2:
+            query = f"SELECT * FROM Student WHERE student_id={id}"
 
-    if user_account_type == 1 : ##professor account
-        query = "DELETE FROM Professor WHERE prof_id=id"
+    if query:
+        cursor.execute(query)
+    check = cursor.fetchone()
 
-    if user_account_type == 2 : ##advisor account
-        query = "DELETE FROM Admin WHERE ad_id=id"
+    if check == None:
+        cursor.close()
+        connection.close()
+        return jsonify({"success": False, "error": "ID doesn't exists"})
+    
+    match account_to_delete_type:
+        case 0:
+            query = f"DELETE FROM Student WHERE student_id={id}"
+        case 1:
+            query = f"DELETE FROM Professor WHERE prof_id={id}"
+        case 2:
+            query = f"DELETE FROM Admin WHERE ad_id={id}"
 
     cursor.execute(query)
+    connection.commit()
 
-    
-    cursor.close()
-    connection.close()
-    
+    ## We just search for the user we added to see if the change worked
+    match account_to_delete_type:
+        case 0:
+            query = f"SELECT * FROM Student WHERE student_id={id}"
+        case 1:
+            query = f"SELECT * FROM Student WHERE student_id={id}"
+        case 2:
+            query = f"SELECT * FROM Student WHERE student_id={id}"
+
+    if query:
+        cursor.execute(query)
+
+    check = cursor.fetchone()
+
+    ## If we found our person, return false since it didn't work
+    if check:
+        cursor.close()
+        connection.close()
+        return jsonify({"success" : False, "error": "DB deletion failed"}), 500
+    else:
+        cursor.close()
+        connection.close()
+        return jsonify({"success": True})
 
 def enrollClass(advising_hold : bool, sid : int):
     connection = get_connection()
@@ -244,6 +301,10 @@ def checkOffCheck():
     pass
 
 def searchForAssignment():
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor(dictionary=True)  # dictionary=True gives column names
 
     assignment_name = input("Enter assignment name to search for: ")
     course_id = input("Enter course ID to search in: ")
@@ -271,7 +332,8 @@ def searchForAssignment():
         return jsonify({"success": False, "error" : "assignment not found"})
     pass
 
-def editHold(user_account_type : int, id : int):
+def editHold(user_account_type : int, student_id : int):
+
     connection = get_connection()
     if not connection:
         return jsonify({"error": "DB connection failed"}), 500
@@ -280,13 +342,14 @@ def editHold(user_account_type : int, id : int):
     if user_account_type != 2: ##only advisors can edit holds
         return jsonify({"success": False, "error" : "can't edit holds with your account type"})
 
-    student_id = input("Enter student ID to edit hold: ")
-    query = "SELECT name FROM Student WHERE student_id=%s"
-    cursor.execute(query, (student_id,))
-    current_user = cursor.fetchone()
-    if not current_user:
+    ##Checks if the student exist
+    query = f"SELECT name FROM Student WHERE student_id={student_id}"
+    cursor.execute(query)
+    fetch_check = cursor.fetchone()
+    if not fetch_check:
         return jsonify({"success": False, "error" : "student not found"})
 
+<<<<<<< HEAD
     query = "UPDATE Student SET advising_hold = NOT advising_hold WHERE student_id=%s"
     cursor.execute(query, (student_id,))
     connection.commit()
@@ -295,6 +358,23 @@ def editHold(user_account_type : int, id : int):
 
     return jsonify({"success": True, "message": "hold status updated"})
     pass
+=======
+    query = f"select advising_hold from Student WHERE student_id={student_id}"
+    cursor.execute(query)
+
+    fetch_check = cursor.fetchone()
+    ##update the student advising hold
+    query = f"UPDATE Student SET advising_hold = NOT advising_hold WHERE student_id={student_id}"
+    cursor.execute(query)
+    cursor.close()
+    connection.close()
+
+    # else:
+    #     return jsonify({"success": False, "error" : "invalid account type"})
+
+    # return jsonify({"success": True, "message" : "hold status updated"})
+ 
+>>>>>>> 1d3f5a584e2b2700cde815592feb624578faa31b
 
 # For calendar view: gets all assignments
 def get_all_assignments():
@@ -343,6 +423,7 @@ if __name__ == "__main__":
 
     if not connection:
         Exception("Couldn't connect to database!")
-    pass
+    
+    print("\"Hi\"")
 
     
