@@ -67,6 +67,20 @@ def addremove():
 def addassign():
     return render_template("addassignment.html")
 
+# Add assignment to database
+@app.route("/api/add_assignment", methods=["POST"])
+def api_add_assignment():
+    data = request.get_json()
+    success = add_assignment(
+        data["course_id"],
+        data["title"],
+        data["description"],
+        data["point_value"],
+        data["due_date"]
+    )
+    return jsonify({"success": success})
+
+
 @app.route('/advisinghold.html')
 def advishold():
     return render_template("advisinghold.html")
@@ -75,9 +89,26 @@ def advishold():
 def calender():
     return render_template("calendar.html")
 
+@app.route("/api/get_assignments")
+def get_assignments_route():
+    return get_all_assignments_json()
+
 @app.route('/enrolldrop.html')
 def enroll():
     return render_template("enrolldrop.html")
+
+@app.route("/api/enroll_class", methods=["POST"])
+def api_enroll_class():
+    data = request.get_json()
+    success = enrollClass(data["student_id"], data["course_id"]) 
+    return jsonify({"success": success})
+
+@app.route("/api/drop_class", methods=["POST"])
+def api_drop_class():
+    data = request.get_json()
+    success = enrollClass(data["student_id"], data["course_id"]) 
+    return jsonify({"success": success})
+
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)

@@ -40,7 +40,6 @@ password		VARCHAR(50)
 
 CREATE TABLE Class (
 course_id	INT PRIMARY KEY,
-grade 		INT,
 title 		VARCHAR(50),
 prof_id		INT,
 FOREIGN KEY(prof_id) REFERENCES Professor(prof_id)
@@ -51,6 +50,7 @@ ON UPDATE CASCADE
 CREATE TABLE Is_in (
 student_id		INT,
 course_id		INT,
+grade 		    INT,
 PRIMARY KEY (student_id, course_id),
 FOREIGN KEY (student_id) REFERENCES Student(student_id)
 ON DELETE CASCADE
@@ -113,27 +113,23 @@ false, 1041, "basedstudent123");
 INSERT INTO Professor VALUES(1544, "Homer Simpson", 
 "Comp sci", "Comp Sci 302", "9/23/21", "B3stT3acher");
 
-INSERT INTO Class VALUES(4150, 88, "Intro to AI", 1544);
+INSERT INTO Assignment VALUES(4150, "AI Research Project", 30, 0, "Evolution of Artificial Intelligence", "2025-12-10", false);
 
-INSERT INTO Is_in VALUES(1203, 4150);
+INSERT INTO Assignment VALUES(4150, "Quiz 1", 20, 0, "Machine Learning Basics", "2025-12-12", false);
 
-INSERT INTO Assignment VALUES(4150, "Exam 2", 100, 63, 
-"No cheating! Review the example exams.", 11/14/25, 11/14/25);
+INSERT INTO Class VALUES(4150, "Intro to AI", 1544);
 
-INSERT INTO Assignment VALUES(4150, "In class Quiz 5", 100, 60, 
-"Closed note, internet is NOT allowed!", 11/7/25, 11/7/25);
+INSERT INTO Class VALUES(4200, "Data Structures", 1544);
 
-INSERT INTO Assignment VALUES(4150, "Chatbot Coding Project", 100, 90, 
-"Code a chatbot from scratch", 10/25/25, 10/24/25);
+INSERT INTO Is_in VALUES(1203, 4150, 88);
 
-INSERT INTO Exam VALUES(4150, "Exam 2", "Comp Sci 206");
+INSERT INTO Quiz VALUES(4150, "Quiz 1", 45);
 
-INSERT INTO Quiz VALUES(4150, "In class Quiz 5", 50);
-
-INSERT INTO Project VALUES(4150, "Chatbot Coding Project", 3);
+INSERT INTO Project VALUES(4150, "AI Research Project", 3);
 
 Select * From Advisor;
 Select * From Student;
 select * from Class;
 select * from Professor;
 select * from Is_in;
+select * from Assignment;

@@ -40,7 +40,7 @@ def login(id, pwd):
     if current_user: ## If true, we got a Student, return info
         cursor.close()
         connection.close()
-        return jsonify({"success": True, "User" : current_user['name'], "ID" : curr_id, "account_type" : "Student"})
+        return jsonify({"success": True, "user" : current_user['name'], "ID" : curr_id, "account_type" : "Student"})
 
     query = "SELECT name FROM Professor WHERE prof_id=%s AND password=%s"
     cursor.execute(query, (curr_id, password))
@@ -251,13 +251,79 @@ def dropClass(sid : int):
     connection.close()
     pass
 
-def addAsignment(id : int):
-    pass
+
+
+def add_assignment(course_id, title, description, point_value, due_date):
+    try:
+        connection = get_connection()
+        if not connection:
+            return False
+
+        cursor = connection.cursor()
+
+        query = """
+            INSERT INTO Assignment (course_id, title, point_value, grade, description, due_date, completed)
+            VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+
+        cursor.execute(query, (
+            course_id,
+            title,
+            point_value,
+            0,                # grade default 0
+            description,
+            due_date,
+            False             # completed default false
+        ))
+
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        return True   # <- return a boolean success flag
+
+    except mysql.connector.Error as err:
+        print("Error:", err)
+        return False
+
+
 
 def organizeByDueDates():
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    query = "SELECT * FROM Assignment"
+    cursor.execute(query)
+    assignment_exists = cursor.fetchone()
+
+    if assignment_exists:
+        query = "SELECT * FROM Assignment ORDER BY due_date ASC"
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False, "message" : "No assignments"})
+    cursor.close()
+    connection.close()
     pass
 
 def organizeByClass():
+    connection = get_connection()
+    if not connection:
+        return jsonify({"error": "DB connection failed"}), 500
+    cursor = connection.cursor()
+
+    query = "SELECT * FROM Assignment"
+    cursor.execute(query)
+    assignment_exists = cursor.fetchone()
+
+    if assignment_exists:
+        query = "SELECT * FROM Assignment ORDER BY course_id ASC"
+        return jsonify({"success": True})
+    else:
+        return jsonify({"success": False, "message" : "No assignments"})
+    cursor.close()
+    connection.close()
     pass
 
 def highlightAssignment():
@@ -268,11 +334,11 @@ def checkOffCheck():
 
 def searchForAssignment(assignment_name, course_id):
 
-    # assignment_name = input("Enter assignment name to search for: ")
-    # course_id = input("Enter course ID to search in: ")
-    due_date : char
+    assignment_name = input("Enter assignment name to search for: ")
+    course_id = input("Enter course ID to search in: ")
+    due_date : str
     point_value : int
-    class_title : char 
+    class_title : str
 
     connection = get_connection()
     if not connection:
@@ -327,6 +393,45 @@ def editHold(user_account_type : int, student_id : int):
     # return jsonify({"success": True, "message" : "hold status updated"})
  
 
+# For calendar view: gets all assignments
+def get_all_assignments():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("SELECT * FROM Assignment ORDER BY due_date ASC")
+        rows = cursor.fetchall() 
+
+        cursor.close()
+        conn.close()
+        return rows
+    except mysql.connector.Error as err:
+        print("Error:", err)
+        return []
+
+def get_all_assignments_json():
+    try:
+        conn = get_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        # Pull assignments from Assignment table, join Class to get course title
+        cursor.execute("""
+            SELECT a.course_id, c.title AS course_title, a.title AS assignment_title, 
+                   a.point_value, a.due_date, a.completed
+            FROM Assignment a
+            JOIN Class c ON a.course_id = c.course_id
+            ORDER BY a.due_date ASC
+        """)
+        rows = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+        return jsonify({"success": True, "assignments": rows})
+
+    except mysql.connector.Error as err:
+        print("Error fetching assignments:", err)
+        return jsonify({"success": False, "assignments": [], "error": str(err)})
 
 ## only call this function if you're running this file, otherwise this is skipped
 ## Open and setups database with setup.sql

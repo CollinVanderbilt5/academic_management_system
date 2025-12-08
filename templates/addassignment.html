@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='forms.css')}}" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='forms.css') }}"
+    />
+
     <link
       href="https://fonts.googleapis.com/css2?family=Limelight&display=swap"
       rel="stylesheet"
@@ -10,26 +14,43 @@
       href="https://fonts.googleapis.com/css2?family=TASA+Explorer:wght@400..800&display=swap"
       rel="stylesheet"
     />
+    <script
+      src="{{ url_for('static', filename='addAssignment.js') }}"
+      defer
+    ></script>
   </head>
   <body>
     <div id="title">
-      <h1>Whiteboard</h1>
+      <div id="name">John Doe</div>
+      <h1 id="whiteboard">Whiteboard</h1>
+      <div id="username">Student</div>
+    </div>
+    <div id="back-button">
+      <a href="{{ url_for('homepage') }}" class="back-button"
+        ><p>Back to Homepage</p></a
+      >
     </div>
     <div class="form-box">
       <div class="form-header">Add Assignment</div>
 
       <div class="form-content">
         <label>Enter Course ID</label>
-        <input type="text" />
+        <input type="text" id="assign-course-id" />
 
         <label>Enter Title</label>
-        <input type="text" />
+        <input type="text" id="assign-title" />
 
         <label>Enter Due Date</label>
-        <input type="date" />
+        <input type="date" id="assign-due-date" />
 
         <label>Enter Description</label>
-        <textarea rows="3"></textarea>
+        <textarea rows="3" id="assign-desc"></textarea>
+
+        <button id="submit-assignment" class="swap-btn">Submit</button>
+        <p
+          id="assign-message"
+          style="color: rgb(141, 175, 219); margin-top: 10px"
+        ></p>
       </div>
     </div>
   </body>
