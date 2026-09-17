@@ -1,4 +1,4 @@
-# Nerd Herd Whiteboard
+# Academic Management System
 
 by Dorian Williams-Webster, Haley Hankins, Colin Vanderbuilt, Will Dorsey
 
